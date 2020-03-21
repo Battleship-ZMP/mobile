@@ -40,7 +40,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent sodales tincidunt nibh. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent convallis erat sed ornare viverra. Integer nec quam nunc. Cras tincidunt luctus nisi et pretium. Curabitur vitae vestibulum enim, ut vestibulum elit. Nullam a mattis erat. In enim libero, convallis ac condimentum quis, vulputate euismod elit. Nullam consequat id nulla ullamcorper pulvinar."/>
+            android:text="CoolRecipes app"/>
     </LinearLayout>
 
 </LinearLayout>

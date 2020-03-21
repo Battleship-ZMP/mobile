@@ -9,6 +9,7 @@ import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import com.firebase.ui.auth.AuthUI
 import com.google.android.material.navigation.NavigationView
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -41,10 +42,21 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 startActivity(intent)
             }
             R.id.nav_cookbook -> {
-                Toast.makeText(this, "Recipe book clicked", Toast.LENGTH_SHORT).show()
+                val intent = Intent(this, CookBookActivity::class.java)
+                startActivity(intent)
+            }
+            R.id.nav_login -> {
+                val intent = Intent(this, LoginActivity::class.java)
+                startActivity(intent)
             }
             R.id.nav_logout -> {
-                Toast.makeText(this, "Sign out clicked", Toast.LENGTH_SHORT).show()
+                AuthUI.getInstance().signOut(this@MainActivity)
+                    .addOnCompleteListener {
+
+                    }
+                    .addOnFailureListener {
+                        e -> Toast.makeText(this@MainActivity,e.message,Toast.LENGTH_SHORT).show()
+                    }
             }
         }
         drawerLayout.closeDrawer(GravityCompat.START)

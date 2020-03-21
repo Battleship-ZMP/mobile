@@ -1,0 +1,77 @@
+{
+  "project_info": {
+    "project_number": "387025921582",
+    "firebase_url": "https://coolrecipes-f4e21.firebaseio.com",
+    "project_id": "coolrecipes-f4e21",
+    "storage_bucket": "coolrecipes-f4e21.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:387025921582:android:7222025bb9a8e56079a1bf",
+        "android_client_info": {
+          "package_name": "CoolRecipes.package"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "387025921582-kom3tc9iqtelnhgo8d6bf8dp1kk45e96.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBE545QDmuh0i-up3-IyJXmCdDJHJkddJQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "387025921582-kom3tc9iqtelnhgo8d6bf8dp1kk45e96.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:387025921582:android:3d94713362c219a879a1bf",
+        "android_client_info": {
+          "package_name": "com.example.coolrecipes"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "387025921582-iol3101i8u9a5ut5ofk90m03rfbq65u9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.coolrecipes",
+            "certificate_hash": "0668429b641bf9cc81d0efc8b3299a7e2e79c2b2"
+          }
+        },
+        {
+          "client_id": "387025921582-kom3tc9iqtelnhgo8d6bf8dp1kk45e96.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBE545QDmuh0i-up3-IyJXmCdDJHJkddJQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "387025921582-kom3tc9iqtelnhgo8d6bf8dp1kk45e96.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
