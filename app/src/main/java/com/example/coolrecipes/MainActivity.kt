@@ -1,22 +1,31 @@
 package com.example.coolrecipes
 
+import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Menu
 import android.view.MenuItem
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import com.firebase.ui.auth.AuthUI
+import com.firebase.ui.auth.IdpResponse
 import com.google.android.material.navigation.NavigationView
+import com.google.firebase.auth.FirebaseAuth
+import java.util.*
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
+    lateinit var providers : List<AuthUI.IdpConfig>
+    private val REQUEST_CODE: Int = 6969
     lateinit var toolbar: Toolbar
     lateinit var drawerLayout: DrawerLayout
     lateinit var navView: NavigationView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -33,6 +42,32 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
         navView.setNavigationItemSelectedListener(this)
+
+        providers = Arrays.asList<AuthUI.IdpConfig>(
+            AuthUI.IdpConfig.EmailBuilder().build(),
+            //AuthUI.IdpConfig.FacebookBuilder().build(),
+            AuthUI.IdpConfig.GoogleBuilder().build())
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if(requestCode == REQUEST_CODE)
+        {
+            val response = IdpResponse.fromResultIntent(data)
+            if(resultCode == Activity.RESULT_OK)
+            {
+                val user = FirebaseAuth.getInstance().currentUser
+                Toast.makeText(this,"Zalogowano pomyślnie!",Toast.LENGTH_SHORT).show()
+                if (user != null) {
+                    val username: TextView = findViewById(R.id.username)
+                    username.text = "${user.displayName}"
+                }
+            }
+            else
+            {
+                Toast.makeText(this, ""+response!!.error!!.message,Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
@@ -46,13 +81,17 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 startActivity(intent)
             }
             R.id.nav_login -> {
-                val intent = Intent(this, LoginActivity::class.java)
-                startActivity(intent)
+                startActivityForResult(AuthUI.getInstance().createSignInIntentBuilder()
+                    .setAvailableProviders(providers)
+                    .setTheme(R.style.AppTheme_NoActionBar)
+                    .build(),REQUEST_CODE)
             }
             R.id.nav_logout -> {
                 AuthUI.getInstance().signOut(this@MainActivity)
                     .addOnCompleteListener {
-
+                        Toast.makeText(this,"Wylogowano!",Toast.LENGTH_SHORT).show()
+                        val username: TextView = findViewById(R.id.username)
+                        username.text = "Niezalogowano"
                     }
                     .addOnFailureListener {
                         e -> Toast.makeText(this@MainActivity,e.message,Toast.LENGTH_SHORT).show()
