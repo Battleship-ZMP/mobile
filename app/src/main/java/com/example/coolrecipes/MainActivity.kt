@@ -1,11 +1,14 @@
 package com.example.coolrecipes
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.AttributeSet
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
@@ -14,11 +17,14 @@ import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.FragmentTransaction
 import com.example.coolrecipes.fragments.CookBookFragment
+import com.example.coolrecipes.fragments.MainFragment
 import com.example.coolrecipes.fragments.ProfileFragment
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.IdpResponse
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
+import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -28,6 +34,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     lateinit var toolbar: Toolbar
     lateinit var drawerLayout: DrawerLayout
     lateinit var navView: NavigationView
+    lateinit var headerView: View
+    lateinit var navMenu: Menu
+    lateinit var username: TextView
+    lateinit var mainFragment: MainFragment
     lateinit var cookbookFragment: CookBookFragment
     lateinit var profileFragment: ProfileFragment
 
@@ -40,6 +50,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         drawerLayout = findViewById(R.id.drawer_layout)
         navView = findViewById(R.id.nav_view)
+        navMenu = nav_view.menu
+        headerView = navView.getHeaderView(0)
+        username = headerView.findViewById(R.id.username)
 
         val toggle = ActionBarDrawerToggle(
             this, drawerLayout, toolbar, 0, 0
@@ -53,27 +66,63 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             //AuthUI.IdpConfig.FacebookBuilder().build(),
             AuthUI.IdpConfig.GoogleBuilder().build())
 
+        mainFragment = MainFragment.newInstance()
         cookbookFragment = CookBookFragment.newInstance()
         profileFragment = ProfileFragment.newInstance()
+
+        supportFragmentManager
+            .beginTransaction()
+            .replace(R.id.container, mainFragment)
+            .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+            .commit()
+
+        val user = FirebaseAuth.getInstance().currentUser
+        if (user != null) {
+            loggedIn()
+        } else {
+            loggedOut()
+        }
+
+        //TEST
+        if (user != null) {
+            Toast.makeText(this, "${user.displayName}", Toast.LENGTH_SHORT).show()
+        } else {
+            Toast.makeText(this, "--------------USER WYLOGOWANY--------------", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun loggedOut() {
+        navMenu.findItem(R.id.nav_logout).isVisible = false
+        navMenu.findItem(R.id.nav_cookbook).isVisible = false
+        navMenu.findItem(R.id.nav_profile).isVisible = false
+        navMenu.findItem(R.id.nav_login).isVisible = true
+        username.text = "Niezalogowano"
+    }
+    private fun loggedIn() {
+        val user = FirebaseAuth.getInstance().currentUser
+        navMenu.findItem(R.id.nav_logout).isVisible = true
+        navMenu.findItem(R.id.nav_cookbook).isVisible = true
+        navMenu.findItem(R.id.nav_profile).isVisible = true
+        navMenu.findItem(R.id.nav_login).isVisible = false
+        if (user != null) {
+            username.text = "${user.displayName}"
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if(requestCode == REQUEST_CODE)
-        {
+        if(requestCode == REQUEST_CODE) {
             val response = IdpResponse.fromResultIntent(data)
-            if(resultCode == Activity.RESULT_OK)
-            {
-                val user = FirebaseAuth.getInstance().currentUser
+            if(resultCode == Activity.RESULT_OK) {
                 Toast.makeText(this,"Zalogowano pomyślnie!",Toast.LENGTH_SHORT).show()
-                if (user != null) {
-                    val username: TextView = findViewById(R.id.username)
-                    username.text = "${user.displayName}"
+                loggedIn()
+            } else {
+                if (response == null) {
+                    finishActivity(requestCode)
                 }
-            }
-            else
-            {
-                Toast.makeText(this, ""+response!!.error!!.message,Toast.LENGTH_SHORT).show()
+                else {
+                    Toast.makeText(this, "" + response!!.error!!.message, Toast.LENGTH_SHORT).show()
+                }
             }
         }
     }
@@ -106,8 +155,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 AuthUI.getInstance().signOut(this@MainActivity)
                     .addOnCompleteListener {
                         Toast.makeText(this,"Wylogowano!",Toast.LENGTH_SHORT).show()
-                        val username: TextView = findViewById(R.id.username)
-                        username.text = "Niezalogowano"
+                        loggedOut()
                     }
                     .addOnFailureListener {
                         e -> Toast.makeText(this@MainActivity,e.message,Toast.LENGTH_SHORT).show()
