@@ -1,11 +1,9 @@
 package com.example.coolrecipes
 
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.AttributeSet
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -82,16 +80,15 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         } else {
             loggedOut()
         }
-
-        //TEST
-        if (user != null) {
-            Toast.makeText(this, "${user.displayName}", Toast.LENGTH_SHORT).show()
-        } else {
-            Toast.makeText(this, "--------------USER WYLOGOWANY--------------", Toast.LENGTH_SHORT).show()
-        }
     }
 
     private fun loggedOut() {
+        supportFragmentManager
+            .beginTransaction()
+            .replace(R.id.container, mainFragment)
+            .addToBackStack(mainFragment.toString())
+            .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+            .commit()
         navMenu.findItem(R.id.nav_logout).isVisible = false
         navMenu.findItem(R.id.nav_cookbook).isVisible = false
         navMenu.findItem(R.id.nav_profile).isVisible = false
@@ -105,7 +102,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         navMenu.findItem(R.id.nav_profile).isVisible = true
         navMenu.findItem(R.id.nav_login).isVisible = false
         if (user != null) {
-            username.text = "${user.displayName}"
+            username.text = "${user.email}"
         }
     }
 
