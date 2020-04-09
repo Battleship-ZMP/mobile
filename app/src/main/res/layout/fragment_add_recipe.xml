@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="15dp"
+    tools:context=".fragments.AddRecipe">
+
+
+    <ImageButton
+        android:id="@+id/imageButtonAdd"
+        android:layout_width="142dp"
+        android:layout_height="148dp"
+        android:layout_gravity="center_horizontal"
+        android:src="@android:drawable/ic_menu_gallery" />
+
+    <EditText
+        android:id="@+id/recipeNameAdd"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="20dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="Nazwa przepisu" />
+
+    <EditText
+        android:id="@+id/recipeDescAdd"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="20dp"
+        android:ems="10"
+        android:gravity="start|top"
+        android:inputType="textMultiLine"
+        android:text="Opis" />
+
+    <EditText
+        android:id="@+id/recipeIngredientsAdd"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="20dp"
+        android:ems="10"
+        android:gravity="start|top"
+        android:inputType="textMultiLine"
+        android:text="Składniki" />
+
+    <EditText
+        android:id="@+id/recipeMainTextAdd"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="20dp"
+        android:ems="10"
+        android:gravity="start|top"
+        android:inputType="textMultiLine"
+        android:text="Przepis" />
+
+    <Button
+        android:id="@+id/recipeButtonUpload"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="Dodaj przepis" />
+</LinearLayout>

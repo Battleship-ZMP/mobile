@@ -13,6 +13,7 @@ import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import com.example.coolrecipes.fragments.CookBookFragment
 import com.example.coolrecipes.fragments.MainFragment
@@ -88,6 +89,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             .replace(R.id.container, mainFragment)
             .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
             .commit()
+        supportFragmentManager
+            .popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+
         navMenu.findItem(R.id.nav_logout).isVisible = false
         navMenu.findItem(R.id.nav_cookbook).isVisible = false
         navMenu.findItem(R.id.nav_profile).isVisible = false
@@ -125,6 +129,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
+            R.id.nav_main -> {
+                supportFragmentManager
+                    .beginTransaction()
+                    .replace(R.id.container, mainFragment)
+                    .addToBackStack(mainFragment.toString())
+                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                    .commit()
+            }
             R.id.nav_cookbook -> {
                 supportFragmentManager
                     .beginTransaction()
