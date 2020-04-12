@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="15dp"
-    tools:context=".fragments.AddRecipe">
+    tools:context=".fragments.AddRecipeFragment">
 
 
     <ImageButton
@@ -23,7 +23,7 @@
         android:paddingTop="20dp"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="Nazwa przepisu" />
+        android:hint="Nazwa przepisu" />
 
     <EditText
         android:id="@+id/recipeDescAdd"
@@ -33,7 +33,7 @@
         android:ems="10"
         android:gravity="start|top"
         android:inputType="textMultiLine"
-        android:text="Opis" />
+        android:hint="Opis" />
 
     <EditText
         android:id="@+id/recipeIngredientsAdd"
@@ -43,7 +43,7 @@
         android:ems="10"
         android:gravity="start|top"
         android:inputType="textMultiLine"
-        android:text="Składniki" />
+        android:hint="Składniki" />
 
     <EditText
         android:id="@+id/recipeMainTextAdd"
@@ -53,7 +53,7 @@
         android:ems="10"
         android:gravity="start|top"
         android:inputType="textMultiLine"
-        android:text="Przepis" />
+        android:hint="Przepis" />
 
     <Button
         android:id="@+id/recipeButtonUpload"

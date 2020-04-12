@@ -15,14 +15,11 @@ import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
-import com.example.coolrecipes.fragments.CookBookFragment
-import com.example.coolrecipes.fragments.MainFragment
-import com.example.coolrecipes.fragments.ProfileFragment
+import com.example.coolrecipes.fragments.*
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.IdpResponse
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
 
@@ -39,6 +36,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     lateinit var mainFragment: MainFragment
     lateinit var cookbookFragment: CookBookFragment
     lateinit var profileFragment: ProfileFragment
+    lateinit var addRecipeFragment: AddRecipeFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,7 +58,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         toggle.syncState()
         navView.setNavigationItemSelectedListener(this)
 
-        providers = Arrays.asList<AuthUI.IdpConfig>(
+        providers = listOf<AuthUI.IdpConfig>(
             AuthUI.IdpConfig.EmailBuilder().build(),
             //AuthUI.IdpConfig.FacebookBuilder().build(),
             AuthUI.IdpConfig.GoogleBuilder().build())
@@ -68,6 +66,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         mainFragment = MainFragment.newInstance()
         cookbookFragment = CookBookFragment.newInstance()
         profileFragment = ProfileFragment.newInstance()
+        addRecipeFragment = AddRecipeFragment.newInstance()
 
         supportFragmentManager
             .beginTransaction()
