@@ -86,14 +86,16 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         supportFragmentManager
             .beginTransaction()
             .replace(R.id.container, mainFragment)
+            .addToBackStack(mainFragment.toString())
             .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
             .commit()
         supportFragmentManager
-            .popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+            .popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
 
         navMenu.findItem(R.id.nav_logout).isVisible = false
         navMenu.findItem(R.id.nav_cookbook).isVisible = false
         navMenu.findItem(R.id.nav_profile).isVisible = false
+        navMenu.findItem(R.id.nav_add_recipe).isVisible = false
         navMenu.findItem(R.id.nav_login).isVisible = true
         username.text = "Niezalogowano"
     }
@@ -102,6 +104,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         navMenu.findItem(R.id.nav_logout).isVisible = true
         navMenu.findItem(R.id.nav_cookbook).isVisible = true
         navMenu.findItem(R.id.nav_profile).isVisible = true
+        navMenu.findItem(R.id.nav_add_recipe).isVisible = true
         navMenu.findItem(R.id.nav_login).isVisible = false
         if (user != null) {
             username.text = "${user.email}"
@@ -133,6 +136,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     .beginTransaction()
                     .replace(R.id.container, mainFragment)
                     .addToBackStack(mainFragment.toString())
+                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                    .commit()
+            }
+            R.id.nav_add_recipe -> {
+                supportFragmentManager
+                    .beginTransaction()
+                    .replace(R.id.container, addRecipeFragment)
+                    .addToBackStack(addRecipeFragment.toString())
                     .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                     .commit()
             }

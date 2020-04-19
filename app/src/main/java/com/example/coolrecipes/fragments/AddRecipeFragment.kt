@@ -18,24 +18,18 @@ import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.util.*
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-
-/**
- * A simple [Fragment] subclass.
- * Use the [CookBookFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class AddRecipeFragment : Fragment() {
 
     private val TAG = "AddRecipeFragment"
     lateinit var buttonUpload: Button
 
     val sdf = SimpleDateFormat("dd.MM.yyyy hh:mm")
-    val currentDate = sdf.format(Date())
 
     @SuppressLint("NewApi")
     private fun addRecipe() {
+        sdf.timeZone = TimeZone.getTimeZone("GMT+2")
+        val currentDate = sdf.format(Date())
+
         val recipe = hashMapOf(
             "date" to currentDate.toString(),
             "description" to recipeDescAdd.text.toString(),
@@ -47,6 +41,12 @@ class AddRecipeFragment : Fragment() {
             "userName" to FirebaseAuth.getInstance().currentUser!!.displayName
         )
 
+        if (recipeDescAdd.text.isEmpty() || recipeIngredientsAdd.text.isEmpty() || recipeMainTextAdd.text.isEmpty() || recipeNameAdd.text.isEmpty())
+        {
+            Toast.makeText(activity,"Uzupełnij wszystkie pola!", Toast.LENGTH_SHORT).show()
+            return
+        }
+
         val firestore = FirebaseFirestore.getInstance()
         firestore.collection("recipes")
             .add(recipe)
@@ -56,6 +56,11 @@ class AddRecipeFragment : Fragment() {
             .addOnFailureListener { e ->
                 Toast.makeText(activity,"Błąd podczas dodawania przepisu!", Toast.LENGTH_SHORT).show()
             }
+
+        recipeNameAdd.setText("")
+        recipeDescAdd.setText("")
+        recipeIngredientsAdd.setText("")
+        recipeMainTextAdd.setText("")
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -66,7 +71,6 @@ class AddRecipeFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_add_recipe, container, false)
     }
 
@@ -80,15 +84,6 @@ class AddRecipeFragment : Fragment() {
     }
 
     companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment CookBookFragment.
-         */
-        // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance() =
             AddRecipeFragment().apply {
