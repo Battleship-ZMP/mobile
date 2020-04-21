@@ -9,90 +9,104 @@
     tools:context=".fragments.ViewRecipe">
 
 
-    <ImageView
-        android:id="@+id/recipeImage"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="253dp"
-        android:paddingBottom="15dp"
-        tools:src="@android:drawable/ic_menu_gallery" />
+        android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/recipeName"
-        android:layout_width="wrap_content"
-        android:layout_height="40dp"
-        android:layout_gravity="center_horizontal"
-        android:text="RecipeName"
-        android:textColor="#050505"
-        android:textSize="24sp" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/recipeDateAdded"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:paddingBottom="10dp"
-        android:paddingTop="10dp"
-        android:text="DateAdded" />
+            <ImageView
+                android:id="@+id/recipeImage"
+                android:layout_width="match_parent"
+                android:layout_height="253dp"
+                android:paddingBottom="15dp"
+                android:src="@android:drawable/ic_menu_gallery" />
 
-    <RatingBar
-        android:id="@+id/recipeRating"
-        android:layout_width="wrap_content"
-        android:layout_height="47dp"
-        android:layout_gravity="center_horizontal"
-        android:max="5"
-        android:stepSize="1" />
+            <TextView
+                android:id="@+id/recipeName"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_gravity="center_horizontal"
+                android:text="RecipeName"
+                android:textColor="#050505"
+                android:textSize="24sp" />
 
-    <TextView
-        android:id="@+id/recipeDescHead"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingLeft="20dp"
-        android:paddingBottom="5dp"
-        android:paddingTop="20dp"
-        android:text="Opis:"
-        android:textColor="#6E6E6E"
-        android:textSize="18sp" />
+            <TextView
+                android:id="@+id/recipeDateAdded"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:paddingBottom="10dp"
+                android:paddingTop="10dp"
+                android:text="DateAdded" />
 
-    <TextView
-        android:id="@+id/recipeDesc"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="RecipeDesc"
-        android:textColor="?android:attr/colorForeground" />
+            <RatingBar
+                android:id="@+id/recipeRating"
+                android:layout_width="wrap_content"
+                android:layout_height="47dp"
+                android:layout_gravity="center_horizontal"
+                android:max="5"
+                android:stepSize="1" />
 
-    <TextView
-        android:id="@+id/recipeIngredientsHead"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="20dp"
-        android:paddingBottom="5dp"
-        android:paddingLeft="20dp"
-        android:text="Składniki:"
-        android:textColor="#6E6E6E"
-        android:textSize="18sp" />
+            <TextView
+                android:id="@+id/recipeDescHead"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="20dp"
+                android:paddingBottom="5dp"
+                android:paddingTop="20dp"
+                android:text="Opis:"
+                android:textColor="#6E6E6E"
+                android:textSize="18sp" />
 
-    <TextView
-        android:id="@+id/recipeIngredients"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="RecipeIngredients"
-        android:textColor="?android:attr/colorForeground"/>
+            <TextView
+                android:id="@+id/recipeDesc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="RecipeDesc"
+                android:textColor="?android:attr/colorForeground" />
 
-    <TextView
-        android:id="@+id/recipeMainTextHead"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="20dp"
-        android:paddingBottom="5dp"
-        android:paddingLeft="20dp"
-        android:text="Przepis:"
-        android:textColor="#6E6E6E"
-        android:textSize="18sp" />
+            <TextView
+                android:id="@+id/recipeIngredientsHead"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="20dp"
+                android:paddingBottom="5dp"
+                android:paddingLeft="20dp"
+                android:text="Składniki:"
+                android:textColor="#6E6E6E"
+                android:textSize="18sp" />
 
-    <TextView
-        android:id="@+id/recipeTextMain"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="RecipeTextMain"
-        android:textColor="?android:attr/colorForeground"/>
+            <TextView
+                android:id="@+id/recipeIngredients"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="RecipeIngredients"
+                android:textColor="?android:attr/colorForeground"/>
+
+            <TextView
+                android:id="@+id/recipeMainTextHead"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="20dp"
+                android:paddingBottom="5dp"
+                android:paddingLeft="20dp"
+                android:text="Przepis:"
+                android:textColor="#6E6E6E"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/recipeTextMain"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="RecipeTextMain"
+                android:textColor="?android:attr/colorForeground"/>
+        </LinearLayout>
+
+
+    </ScrollView>
+
 </LinearLayout>
