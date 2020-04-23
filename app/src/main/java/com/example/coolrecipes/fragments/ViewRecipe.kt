@@ -40,6 +40,7 @@ class ViewRecipe : Fragment() {
                         recipeName.text = "${document.get("name")}"
                         recipeDateAdded.text = "${document.get("date")}"
                         recipeRating.rating = "${document.get("rating")}".toFloat()
+                        recipeAddedBy.text = "${document.get("userName")}"
                         recipeDesc.text = "${document.get("description")}"
                         recipeIngredients.text = "${document.get("ingredients")}"
                         recipeTextMain.text = "${document.get("instructions")}"

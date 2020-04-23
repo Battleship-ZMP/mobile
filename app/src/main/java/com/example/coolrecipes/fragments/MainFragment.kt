@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.coolrecipes.R
@@ -62,6 +63,7 @@ class MainFragment : Fragment() {
                         .beginTransaction()
                         .replace(R.id.container, viewRecipe)
                         .addToBackStack(ViewRecipe().toString())
+                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                         .commit()
                 }
             }

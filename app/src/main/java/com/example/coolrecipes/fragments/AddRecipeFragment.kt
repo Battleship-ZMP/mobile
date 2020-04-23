@@ -22,7 +22,7 @@ class AddRecipeFragment : Fragment() {
     private val TAG = "AddRecipeFragment"
     lateinit var buttonUpload: Button
 
-    val sdf = SimpleDateFormat("dd.MM.yyyy hh:mm")
+    private val sdf = SimpleDateFormat("dd.MM.yyyy hh:mm")
 
     @SuppressLint("NewApi")
     private fun addRecipe() {
@@ -37,7 +37,8 @@ class AddRecipeFragment : Fragment() {
             "name" to recipeNameAdd.text.toString().trim(),
             "photo" to null,
             "rating" to 0,
-            "userName" to FirebaseAuth.getInstance().currentUser!!.displayName
+            "userName" to FirebaseAuth.getInstance().currentUser!!.displayName,
+            "userID" to FirebaseAuth.getInstance().currentUser!!.uid
         )
 
         if (recipeDescAdd.text.isEmpty() || recipeIngredientsAdd.text.isEmpty() || recipeMainTextAdd.text.isEmpty() || recipeNameAdd.text.isEmpty())

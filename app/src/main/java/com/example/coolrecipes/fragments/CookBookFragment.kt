@@ -1,54 +1,101 @@
 package com.example.coolrecipes.fragments
 
+import android.content.Context
 import android.os.Bundle
+import android.provider.ContactsContract
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-
+import android.widget.Toast
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentTransaction
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.coolrecipes.R
+import com.example.coolrecipes.Recipe
+import com.example.coolrecipes.RecipeAdapter
+import com.firebase.ui.firestore.FirestoreRecyclerOptions
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
+import kotlinx.android.synthetic.main.fragment_main.*
+import kotlinx.android.synthetic.main.fragment_view_recipe.*
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Use the [CookBookFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class CookBookFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+    private val db = FirebaseFirestore.getInstance()
+    private var recipeRef = db.collection("recipes").whereEqualTo("userID", FirebaseAuth.getInstance().currentUser?.uid)
+    private lateinit var adapter: RecipeAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
+
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_cook_book, container, false)
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        setUpRecyclerView()
+
+        adapter.setOnItemClickListener(object : RecipeAdapter.OnItemClickListener {
+            override fun onItemClick(documentSnapshot: DocumentSnapshot, position: Int) {
+                val recipe = documentSnapshot.toObject(Recipe::class.java)
+                val id = documentSnapshot.id
+                val path = documentSnapshot.reference.path
+
+                val bundle = Bundle()
+                bundle.putString("ID", id)
+
+                val viewRecipe = ViewRecipe()
+                viewRecipe.arguments = bundle
+
+                val fragmentManager: FragmentManager? = fragmentManager
+                if (fragmentManager != null) {
+                    fragmentManager
+                        .beginTransaction()
+                        .replace(R.id.container, viewRecipe)
+                        .addToBackStack(ViewRecipe().toString())
+                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                        .commit()
+                }
+            }
+        })
+    }
+
+    private fun setUpRecyclerView() {
+        val query: Query = recipeRef.orderBy("rating", Query.Direction.DESCENDING)
+
+        val options = FirestoreRecyclerOptions.Builder<Recipe>()
+            .setQuery(query, Recipe::class.java)
+            .build()
+
+        adapter = RecipeAdapter(options)
+
+        recyclerview_main_list.setHasFixedSize(true)
+        recyclerview_main_list.layoutManager = LinearLayoutManager(this.context)
+        recyclerview_main_list.adapter = adapter
+    }
+
+    override fun onStart() {
+        super.onStart()
+        adapter!!.startListening()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        adapter!!.stopListening()
+    }
+
     companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment CookBookFragment.
-         */
-        // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance() =
             CookBookFragment().apply {

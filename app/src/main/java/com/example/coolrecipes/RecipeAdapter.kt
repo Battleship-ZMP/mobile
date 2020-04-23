@@ -25,6 +25,7 @@ class RecipeAdapter(options: FirestoreRecyclerOptions<Recipe>) :
         holder.RecipeTitleMain.text = model.getName()
         holder.RecipeDescriptionMain.text = model.getDescription()
         holder.RecipeRatingMain.rating = model.getRating()
+        holder.RecipeUserNameMain.text = model.getUserName()
     }
 
     override fun onCreateViewHolder(
@@ -43,6 +44,7 @@ class RecipeAdapter(options: FirestoreRecyclerOptions<Recipe>) :
         var RecipeTitleMain: TextView = itemView.findViewById(R.id.recipe_title_main_list)
         var RecipeDescriptionMain: TextView = itemView.findViewById(R.id.recipe_description_main_list)
         var RecipeRatingMain: RatingBar = itemView.findViewById(R.id.recipe_rating_main_list)
+        var RecipeUserNameMain: TextView = itemView.findViewById(R.id.recipe_addedby_main_list)
 
         init {
             itemView.setOnClickListener {
