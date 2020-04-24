@@ -21,12 +21,10 @@ import kotlinx.android.synthetic.main.fragment_main.*
 
 class CookBookFavoritesFragment : Fragment() {
     private val db = FirebaseFirestore.getInstance()
-    private var recipeRef = db.collection("recipes")
     private lateinit var adapter: RecipeAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
     }
 
     override fun onCreateView(
@@ -67,7 +65,13 @@ class CookBookFavoritesFragment : Fragment() {
     }
 
     private fun setUpRecyclerView() {
-        val query: Query = recipeRef.orderBy("rating", Query.Direction.DESCENDING)
+        var recipeRef = db.collection("recipes")
+        var query: Query = recipeRef.orderBy("rating", Query.Direction.DESCENDING)
+        if(FirebaseAuth.getInstance().currentUser?.uid != null) {
+            query = recipeRef
+                .orderBy("rating", Query.Direction.DESCENDING)
+                .whereArrayContains("savedByUsers", FirebaseAuth.getInstance().currentUser!!.uid)
+        }
 
         val options = FirestoreRecyclerOptions.Builder<Recipe>()
             .setQuery(query, Recipe::class.java)
