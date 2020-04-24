@@ -1,17 +1,13 @@
 package com.example.coolrecipes.fragments
 
-import android.content.Context
 import android.os.Bundle
-import android.provider.ContactsContract
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.coolrecipes.R
 import com.example.coolrecipes.Recipe
 import com.example.coolrecipes.RecipeAdapter
@@ -21,10 +17,9 @@ import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import kotlinx.android.synthetic.main.fragment_main.*
-import kotlinx.android.synthetic.main.fragment_view_recipe.*
 
 
-class CookBookFragment : Fragment() {
+class CookBookAddedFragment : Fragment() {
     private val db = FirebaseFirestore.getInstance()
     private var recipeRef = db.collection("recipes").whereEqualTo("userID", FirebaseAuth.getInstance().currentUser?.uid)
     private lateinit var adapter: RecipeAdapter
@@ -98,7 +93,7 @@ class CookBookFragment : Fragment() {
     companion object {
         @JvmStatic
         fun newInstance() =
-            CookBookFragment().apply {
+            CookBookAddedFragment().apply {
                 arguments = Bundle().apply {
 
                 }

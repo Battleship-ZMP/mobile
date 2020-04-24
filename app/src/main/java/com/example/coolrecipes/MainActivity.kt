@@ -21,7 +21,6 @@ import com.firebase.ui.auth.IdpResponse
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_main.*
-import java.util.*
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
@@ -34,7 +33,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     lateinit var navMenu: Menu
     lateinit var username: TextView
     lateinit var mainFragment: MainFragment
-    lateinit var cookbookFragment: CookBookFragment
+    lateinit var cookbookFavoritesFragment: CookBookFavoritesFragment
+    lateinit var cookbookAddedFragment: CookBookAddedFragment
     lateinit var profileFragment: ProfileFragment
     lateinit var addRecipeFragment: AddRecipeFragment
 
@@ -64,7 +64,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             AuthUI.IdpConfig.GoogleBuilder().build())
 
         mainFragment = MainFragment.newInstance()
-        cookbookFragment = CookBookFragment.newInstance()
+        cookbookAddedFragment = CookBookAddedFragment.newInstance()
+        cookbookFavoritesFragment = CookBookFavoritesFragment.newInstance()
         profileFragment = ProfileFragment.newInstance()
         addRecipeFragment = AddRecipeFragment.newInstance()
 
@@ -147,11 +148,19 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                     .commit()
             }
-            R.id.nav_cookbook -> {
+            R.id.nav_cookbook_added -> {
                 supportFragmentManager
                     .beginTransaction()
-                    .replace(R.id.container, cookbookFragment)
-                    .addToBackStack(cookbookFragment.toString())
+                    .replace(R.id.container, cookbookAddedFragment)
+                    .addToBackStack(cookbookAddedFragment.toString())
+                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                    .commit()
+            }
+            R.id.nav_cookbook_favorited -> {
+                supportFragmentManager
+                    .beginTransaction()
+                    .replace(R.id.container, cookbookFavoritesFragment)
+                    .addToBackStack(cookbookFavoritesFragment.toString())
                     .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                     .commit()
             }
