@@ -38,7 +38,8 @@ class AddRecipeFragment : Fragment() {
             "photo" to null,
             "rating" to 0,
             "userName" to FirebaseAuth.getInstance().currentUser!!.displayName,
-            "userID" to FirebaseAuth.getInstance().currentUser!!.uid
+            "userID" to FirebaseAuth.getInstance().currentUser!!.uid,
+            "savedByUsers" to arrayListOf<String>()
         )
 
         if (recipeDescAdd.text.isEmpty() || recipeIngredientsAdd.text.isEmpty() || recipeMainTextAdd.text.isEmpty() || recipeNameAdd.text.isEmpty())

@@ -105,7 +105,16 @@
                 android:id="@+id/recipeTextMain"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:paddingBottom="20dp"
                 android:textColor="?android:attr/colorForeground"/>
+
+            <Button
+                android:id="@+id/favoriteButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Dodaj do ulubionych" />
+
+
         </LinearLayout>
 
 

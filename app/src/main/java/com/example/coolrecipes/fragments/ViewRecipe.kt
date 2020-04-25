@@ -5,14 +5,21 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.Toast
 
 import com.example.coolrecipes.R
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import kotlinx.android.synthetic.main.fragment_view_recipe.*
 
 class ViewRecipe : Fragment() {
 
     private var db = FirebaseFirestore.getInstance()
+    lateinit var buttonFavorite: Button
+    private var userID = FirebaseAuth.getInstance().currentUser?.uid
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,8 +51,31 @@ class ViewRecipe : Fragment() {
                         recipeDesc.text = "${document.get("description")}"
                         recipeIngredients.text = "${document.get("ingredients")}"
                         recipeTextMain.text = "${document.get("instructions")}"
-                    }
 
+                        buttonFavorite = favoriteButton
+                        val usersArray = document.get("savedByUsers") as List<*>
+                        if(usersArray.contains(userID))
+                        {
+                            buttonFavorite.text = "Usuń z ulubionych"
+                        } else {
+                            buttonFavorite.text = "Dodaj do ulubionych"
+                        }
+
+                        buttonFavorite.setOnClickListener{
+                            if(usersArray.contains(userID))
+                            {
+                                buttonFavorite.text = "Usuń z ulubionych"
+                                recipeRef.update("savedByUsers", FieldValue.arrayRemove(userID))
+                                Toast.makeText(activity,"Usunięto z ulubionych!", Toast.LENGTH_SHORT).show()
+                                buttonFavorite.text = "Dodaj do ulubionych"
+                            } else {
+                                buttonFavorite.text = "Dodaj do ulubionych"
+                                recipeRef.update("savedByUsers", FieldValue.arrayUnion(userID))
+                                Toast.makeText(activity,"Dodano do ulubionych!!", Toast.LENGTH_SHORT).show()
+                                buttonFavorite.text = "Usuń z ulubionych"
+                            }
+                        }
+                    }
                 }
         }
     }
