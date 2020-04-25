@@ -20,6 +20,7 @@ import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.IdpResponse
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -110,6 +111,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         if (user != null) {
             username.text = "${user.email}"
         }
+        getProfile()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -191,6 +193,36 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
         drawerLayout.closeDrawer(GravityCompat.START)
         return true
+    }
+
+    private fun createProfile() {
+        val profile = hashMapOf(
+            "userName" to FirebaseAuth.getInstance().currentUser!!.displayName,
+            "email" to FirebaseAuth.getInstance().currentUser!!.email,
+            "bio" to "Biografia",
+            "photo" to null
+        )
+
+        val firestore = FirebaseFirestore.getInstance()
+        firestore.collection("users")
+            .document(FirebaseAuth.getInstance().currentUser!!.uid)
+            .set(profile)
+    }
+
+    private fun getProfile() {
+        val db = FirebaseFirestore.getInstance()
+        val userRef = db.collection("users").document(FirebaseAuth.getInstance().currentUser!!.uid)
+        userRef.get()
+            .addOnSuccessListener { document ->
+                if (document != null) {
+                    if (document.data == null) {
+                        createProfile()
+                        Toast.makeText(this,"Utworzono nowy profil!", Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(this,"Wczytano profil: " + document.data, Toast.LENGTH_SHORT).show()
+                    }
+                        }
+            }
     }
 
 }
