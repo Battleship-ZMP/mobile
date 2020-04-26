@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter
 import com.firebase.ui.firestore.FirestoreRecyclerOptions
 import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.FirebaseFirestore
 
 
 class RecipeAdapter(options: FirestoreRecyclerOptions<Recipe>) :
@@ -25,7 +26,16 @@ class RecipeAdapter(options: FirestoreRecyclerOptions<Recipe>) :
         holder.RecipeTitleMain.text = model.getName()
         holder.RecipeDescriptionMain.text = model.getDescription()
         holder.RecipeRatingMain.rating = model.getRating()
-        holder.RecipeUserNameMain.text = model.getUserName()
+
+        val userRef = FirebaseFirestore.getInstance().collection("users").document(model.getUserID())
+
+        userRef.get()
+            .addOnSuccessListener { document ->
+                if (document != null) {
+                    val userName = document.get("userName") as String
+                    holder.RecipeUserNameMain.text = userName
+                }
+            }
     }
 
     override fun onCreateViewHolder(

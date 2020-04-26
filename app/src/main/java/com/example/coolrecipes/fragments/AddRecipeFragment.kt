@@ -28,6 +28,16 @@ class AddRecipeFragment : Fragment() {
     private fun addRecipe() {
         sdf.timeZone = TimeZone.getTimeZone("GMT+2")
         val currentDate = sdf.format(Date())
+        val userID = FirebaseAuth.getInstance().currentUser!!.uid
+        var userName=""
+        val userRef = FirebaseFirestore.getInstance().collection("users").document(userID)
+
+        userRef.get()
+            .addOnSuccessListener { document ->
+                if (document != null) {
+                    userName = document.get("userName") as String
+                }
+            }
 
         val recipe = hashMapOf(
             "date" to currentDate.toString(),
@@ -37,8 +47,8 @@ class AddRecipeFragment : Fragment() {
             "name" to recipeNameAdd.text.toString().trim(),
             "photo" to null,
             "rating" to 0,
-            "userName" to FirebaseAuth.getInstance().currentUser!!.displayName,
-            "userID" to FirebaseAuth.getInstance().currentUser!!.uid,
+            "userName" to userName,
+            "userID" to userID,
             "savedByUsers" to arrayListOf<String>()
         )
 

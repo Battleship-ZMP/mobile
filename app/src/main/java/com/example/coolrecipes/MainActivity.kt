@@ -109,7 +109,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         navMenu.findItem(R.id.nav_add_recipe).isVisible = true
         navMenu.findItem(R.id.nav_login).isVisible = false
         if (user != null) {
-            username.text = "${user.email}"
+            username.text = "${user.displayName}"
         }
         getProfile()
     }
@@ -214,14 +214,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val userRef = db.collection("users").document(FirebaseAuth.getInstance().currentUser!!.uid)
         userRef.get()
             .addOnSuccessListener { document ->
-                if (document != null) {
                     if (document.data == null) {
                         createProfile()
-                        Toast.makeText(this,"Utworzono nowy profil!", Toast.LENGTH_SHORT).show()
-                    } else {
-                        Toast.makeText(this,"Wczytano profil: " + document.data, Toast.LENGTH_SHORT).show()
                     }
-                        }
             }
     }
 

@@ -19,7 +19,7 @@ class ViewRecipe : Fragment() {
 
     private var db = FirebaseFirestore.getInstance()
     lateinit var buttonFavorite: Button
-    private var userID = FirebaseAuth.getInstance().currentUser?.uid
+    private var currentUserID = FirebaseAuth.getInstance().currentUser?.uid
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,17 +44,28 @@ class ViewRecipe : Fragment() {
             recipeRef.get()
                 .addOnSuccessListener { document ->
                     if (document != null) {
+                        val userID = document.get("userID")
+                        var userName=""
+                        val userRef = FirebaseFirestore.getInstance().collection("users").document(userID as String)
+
+                        userRef.get()
+                            .addOnSuccessListener { document ->
+                                if (document != null) {
+                                    userName = document.get("userName") as String
+                                    recipeAddedBy.text = userName
+                                }
+                            }
+
                         recipeName.text = "${document.get("name")}"
                         recipeDateAdded.text = "${document.get("date")}"
                         recipeRating.rating = "${document.get("rating")}".toFloat()
-                        recipeAddedBy.text = "${document.get("userName")}"
                         recipeDesc.text = "${document.get("description")}"
                         recipeIngredients.text = "${document.get("ingredients")}"
                         recipeTextMain.text = "${document.get("instructions")}"
 
                         buttonFavorite = favoriteButton
-                        val usersArray = document.get("savedByUsers") as List<*>
-                        if(usersArray.contains(userID))
+                        var usersArray = document.get("savedByUsers") as List<*>
+                        if(usersArray.contains(currentUserID))
                         {
                             buttonFavorite.text = "Usuń z ulubionych"
                         } else {
@@ -62,16 +73,13 @@ class ViewRecipe : Fragment() {
                         }
 
                         buttonFavorite.setOnClickListener{
-                            if(usersArray.contains(userID))
-                            {
-                                buttonFavorite.text = "Usuń z ulubionych"
-                                recipeRef.update("savedByUsers", FieldValue.arrayRemove(userID))
+                            if(usersArray.contains(currentUserID)) {
+                                recipeRef.update("savedByUsers", FieldValue.arrayRemove(currentUserID))
                                 Toast.makeText(activity,"Usunięto z ulubionych!", Toast.LENGTH_SHORT).show()
                                 buttonFavorite.text = "Dodaj do ulubionych"
                             } else {
-                                buttonFavorite.text = "Dodaj do ulubionych"
-                                recipeRef.update("savedByUsers", FieldValue.arrayUnion(userID))
-                                Toast.makeText(activity,"Dodano do ulubionych!!", Toast.LENGTH_SHORT).show()
+                                recipeRef.update("savedByUsers", FieldValue.arrayUnion(currentUserID))
+                                Toast.makeText(activity,"Dodano do ulubionych!", Toast.LENGTH_SHORT).show()
                                 buttonFavorite.text = "Usuń z ulubionych"
                             }
                         }

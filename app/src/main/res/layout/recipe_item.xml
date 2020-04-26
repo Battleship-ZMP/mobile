@@ -27,7 +27,6 @@
             android:id="@+id/recipe_title_main_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="recipe title"
             android:textAlignment="center"
             android:singleLine="true"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
@@ -49,7 +48,6 @@
             android:id="@+id/recipe_addedby_main_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="added by"
             android:textAlignment="center"
             android:singleLine="true"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
@@ -60,7 +58,6 @@
             android:id="@+id/recipe_description_main_list"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="recipe description"
             android:layout_below="@id/recipe_addedby_main_list"
             android:textAppearance="@style/TextAppearance.AppCompat"/>
 
