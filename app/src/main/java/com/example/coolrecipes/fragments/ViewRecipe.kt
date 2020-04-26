@@ -42,8 +42,9 @@ class ViewRecipe : Fragment() {
             recipeRef.get()
                 .addOnSuccessListener { document ->
                     if (document != null) {
-                        val userRef = document.get("userRef") as DocumentReference
+                        val userID = document.get("userID")
                         var userName=""
+                        val userRef = FirebaseFirestore.getInstance().collection("users").document(userID as String)
                         userRef.get()
                             .addOnSuccessListener { document ->
                                 if (document != null) {
