@@ -48,7 +48,7 @@ class AddRecipeFragment : Fragment() {
             "photo" to null,
             "rating" to 0,
             "userName" to userName,
-            "userID" to userID,
+            "userRef" to "/users/$userID",
             "savedByUsers" to arrayListOf<String>()
         )
 

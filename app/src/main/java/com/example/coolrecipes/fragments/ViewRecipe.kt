@@ -10,16 +10,14 @@ import android.widget.Toast
 
 import com.example.coolrecipes.R
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FieldValue
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.Query
+import com.google.firebase.firestore.*
 import kotlinx.android.synthetic.main.fragment_view_recipe.*
 
 class ViewRecipe : Fragment() {
 
     private var db = FirebaseFirestore.getInstance()
     lateinit var buttonFavorite: Button
-    private var currentUserID = FirebaseAuth.getInstance().currentUser?.uid
+    private val currentUserID = FirebaseAuth.getInstance().currentUser?.uid
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,10 +42,8 @@ class ViewRecipe : Fragment() {
             recipeRef.get()
                 .addOnSuccessListener { document ->
                     if (document != null) {
-                        val userID = document.get("userID")
+                        val userRef = document.get("userRef") as DocumentReference
                         var userName=""
-                        val userRef = FirebaseFirestore.getInstance().collection("users").document(userID as String)
-
                         userRef.get()
                             .addOnSuccessListener { document ->
                                 if (document != null) {
@@ -65,22 +61,26 @@ class ViewRecipe : Fragment() {
 
                         buttonFavorite = favoriteButton
                         var usersArray = document.get("savedByUsers") as List<*>
+                        var isFavorited = true
                         if(usersArray.contains(currentUserID))
                         {
                             buttonFavorite.text = "Usuń z ulubionych"
                         } else {
                             buttonFavorite.text = "Dodaj do ulubionych"
+                            isFavorited = false
                         }
 
                         buttonFavorite.setOnClickListener{
-                            if(usersArray.contains(currentUserID)) {
+                            if(isFavorited) {
                                 recipeRef.update("savedByUsers", FieldValue.arrayRemove(currentUserID))
                                 Toast.makeText(activity,"Usunięto z ulubionych!", Toast.LENGTH_SHORT).show()
                                 buttonFavorite.text = "Dodaj do ulubionych"
+                                isFavorited = false
                             } else {
                                 recipeRef.update("savedByUsers", FieldValue.arrayUnion(currentUserID))
                                 Toast.makeText(activity,"Dodano do ulubionych!", Toast.LENGTH_SHORT).show()
                                 buttonFavorite.text = "Usuń z ulubionych"
+                                isFavorited = true
                             }
                         }
                     }
