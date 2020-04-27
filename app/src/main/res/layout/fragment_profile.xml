@@ -47,10 +47,15 @@
                 android:id="@+id/updateProfileButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="200dp"
+                android:layout_marginTop="40dp"
                 android:text="Ustawienia profilu" />
 
-
+            <Button
+                android:id="@+id/profileRecipesButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                android:text="Przepisy użytkownika" />
 
         </LinearLayout>
 

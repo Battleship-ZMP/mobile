@@ -167,6 +167,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     .commit()
             }
             R.id.nav_profile -> {
+                val userBundle = Bundle()
+                userBundle.putString("UserID", FirebaseAuth.getInstance().currentUser!!.uid)
+                profileFragment.arguments = userBundle
+
                 supportFragmentManager
                     .beginTransaction()
                     .replace(R.id.container, profileFragment)

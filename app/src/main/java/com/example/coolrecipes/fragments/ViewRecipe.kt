@@ -6,7 +6,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.TextView
 import android.widget.Toast
+import androidx.core.view.isVisible
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentTransaction
 
 import com.example.coolrecipes.R
 import com.google.firebase.auth.FirebaseAuth
@@ -17,6 +21,7 @@ class ViewRecipe : Fragment() {
 
     private var db = FirebaseFirestore.getInstance()
     lateinit var buttonFavorite: Button
+    lateinit var recipeUser: TextView
     private val currentUserID = FirebaseAuth.getInstance().currentUser?.uid
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,7 +39,7 @@ class ViewRecipe : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val bundle = this.arguments
-        val RecipeID = bundle?.getString("ID")
+        val RecipeID = bundle?.getString("RecipeID")
         val recipeRef = RecipeID?.let { db.collection("recipes").document(it) }
 
 
@@ -49,7 +54,7 @@ class ViewRecipe : Fragment() {
                             .addOnSuccessListener { document ->
                                 if (document != null) {
                                     userName = document.get("userName") as String
-                                    recipeAddedBy.text = userName
+                                    recipeUser.text = userName
                                 }
                             }
 
@@ -61,6 +66,9 @@ class ViewRecipe : Fragment() {
                         recipeTextMain.text = "${document.get("instructions")}"
 
                         buttonFavorite = favoriteButton
+                        if (currentUserID == null) {
+                            buttonFavorite.isVisible = false
+                        }
                         var usersArray = document.get("savedByUsers") as List<*>
                         var isFavorited = true
                         if(usersArray.contains(currentUserID))
@@ -82,6 +90,25 @@ class ViewRecipe : Fragment() {
                                 Toast.makeText(activity,"Dodano do ulubionych!", Toast.LENGTH_SHORT).show()
                                 buttonFavorite.text = "Usuń z ulubionych"
                                 isFavorited = true
+                            }
+                        }
+
+                        recipeUser = recipeAddedBy
+                        recipeUser.setOnClickListener{
+                            val userBundle = Bundle()
+                            userBundle.putString("UserID", userID)
+
+                            val profileFragment = ProfileFragment()
+                            profileFragment.arguments = userBundle
+
+                            val fragmentManager: FragmentManager? = fragmentManager
+                            if (fragmentManager != null) {
+                                fragmentManager
+                                    .beginTransaction()
+                                    .replace(R.id.container, profileFragment)
+                                    .addToBackStack(ViewRecipe().toString())
+                                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                                    .commit()
                             }
                         }
                     }

@@ -21,7 +21,6 @@ import kotlinx.android.synthetic.main.fragment_main.*
 
 class CookBookAddedFragment : Fragment() {
     private val db = FirebaseFirestore.getInstance()
-    private var recipeRef = db.collection("recipes").whereEqualTo("userID", FirebaseAuth.getInstance().currentUser?.uid)
     private lateinit var adapter: RecipeAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,14 +43,14 @@ class CookBookAddedFragment : Fragment() {
         adapter.setOnItemClickListener(object : RecipeAdapter.OnItemClickListener {
             override fun onItemClick(documentSnapshot: DocumentSnapshot, position: Int) {
                 val recipe = documentSnapshot.toObject(Recipe::class.java)
-                val id = documentSnapshot.id
+                val recipeid = documentSnapshot.id
                 val path = documentSnapshot.reference.path
 
-                val bundle = Bundle()
-                bundle.putString("ID", id)
+                val recipeBundle = Bundle()
+                recipeBundle.putString("RecipeID", recipeid)
 
                 val viewRecipe = ViewRecipe()
-                viewRecipe.arguments = bundle
+                viewRecipe.arguments = recipeBundle
 
                 val fragmentManager: FragmentManager? = fragmentManager
                 if (fragmentManager != null) {
@@ -67,7 +66,10 @@ class CookBookAddedFragment : Fragment() {
     }
 
     private fun setUpRecyclerView() {
-        val query: Query = recipeRef.orderBy("rating", Query.Direction.DESCENDING)
+        val recipeRef = db.collection("recipes")
+        val query: Query = recipeRef
+            .orderBy("rating", Query.Direction.DESCENDING)
+            .whereEqualTo("userID", FirebaseAuth.getInstance().currentUser?.uid)
 
         val options = FirestoreRecyclerOptions.Builder<Recipe>()
             .setQuery(query, Recipe::class.java)

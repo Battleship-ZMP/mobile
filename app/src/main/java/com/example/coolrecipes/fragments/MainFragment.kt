@@ -48,14 +48,14 @@ class MainFragment : Fragment() {
         adapter.setOnItemClickListener(object : RecipeAdapter.OnItemClickListener {
             override fun onItemClick(documentSnapshot: DocumentSnapshot, position: Int) {
                 val recipe = documentSnapshot.toObject(Recipe::class.java)
-                val id = documentSnapshot.id
+                val recipeid = documentSnapshot.id
                 val path = documentSnapshot.reference.path
 
-                val bundle = Bundle()
-                bundle.putString("ID", id)
+                val recipeBundle = Bundle()
+                recipeBundle.putString("RecipeID", recipeid)
 
                 val viewRecipe = ViewRecipe()
-                viewRecipe.arguments = bundle
+                viewRecipe.arguments = recipeBundle
 
                 val fragmentManager: FragmentManager? = fragmentManager
                 if (fragmentManager != null) {

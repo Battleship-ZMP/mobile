@@ -42,14 +42,14 @@ class CookBookFavoritesFragment : Fragment() {
         adapter.setOnItemClickListener(object : RecipeAdapter.OnItemClickListener {
             override fun onItemClick(documentSnapshot: DocumentSnapshot, position: Int) {
                 val recipe = documentSnapshot.toObject(Recipe::class.java)
-                val id = documentSnapshot.id
+                val recipeid = documentSnapshot.id
                 val path = documentSnapshot.reference.path
 
-                val bundle = Bundle()
-                bundle.putString("ID", id)
+                val recipeBundle = Bundle()
+                recipeBundle.putString("RecipeID", recipeid)
 
                 val viewRecipe = ViewRecipe()
-                viewRecipe.arguments = bundle
+                viewRecipe.arguments = recipeBundle
 
                 val fragmentManager: FragmentManager? = fragmentManager
                 if (fragmentManager != null) {
@@ -65,13 +65,11 @@ class CookBookFavoritesFragment : Fragment() {
     }
 
     private fun setUpRecyclerView() {
-        var recipeRef = db.collection("recipes")
-        var query: Query = recipeRef.orderBy("rating", Query.Direction.DESCENDING)
-        if(FirebaseAuth.getInstance().currentUser?.uid != null) {
-            query = recipeRef
-                .orderBy("rating", Query.Direction.DESCENDING)
-                .whereArrayContains("savedByUsers", FirebaseAuth.getInstance().currentUser!!.uid)
-        }
+        val recipeRef = db.collection("recipes")
+        val query = recipeRef
+            .orderBy("rating", Query.Direction.DESCENDING)
+            .whereArrayContains("savedByUsers", FirebaseAuth.getInstance().currentUser!!.uid)
+
 
         val options = FirestoreRecyclerOptions.Builder<Recipe>()
             .setQuery(query, Recipe::class.java)
