@@ -24,10 +24,6 @@ class ViewRecipe : Fragment() {
     lateinit var recipeUser: TextView
     private val currentUserID = FirebaseAuth.getInstance().currentUser?.uid
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?

@@ -72,7 +72,21 @@ class ProfileFragment : Fragment() {
         }
 
         userRecipes.setOnClickListener{
+            val userBundle = Bundle()
+            userBundle.putString("UserID", UserID)
 
+            val viewUserRecipes = UserRecipesFragment()
+            viewUserRecipes.arguments = userBundle
+
+            val fragmentManager: FragmentManager? = fragmentManager
+            if (fragmentManager != null) {
+                fragmentManager
+                    .beginTransaction()
+                    .replace(R.id.container, viewUserRecipes)
+                    .addToBackStack(viewUserRecipes.toString())
+                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                    .commit()
+            }
         }
 
     }
