@@ -48,6 +48,9 @@ class ProfileFragment : Fragment() {
         val UserID = bundle?.getString("UserID")
         val userRef = UserID?.let { db.collection("users").document(it) }
 
+        val userBundle = Bundle()
+        userBundle.putString("UserID", UserID)
+
         if (userRef != null) {
             userRef.get()
                 .addOnSuccessListener { document ->
@@ -68,13 +71,21 @@ class ProfileFragment : Fragment() {
         }
 
         updateProfile.setOnClickListener{
+            val updateProfile = ProfileUpdate()
+            updateProfile.arguments = userBundle
 
+            val fragmentManager: FragmentManager? = fragmentManager
+            if (fragmentManager != null) {
+                fragmentManager
+                    .beginTransaction()
+                    .replace(R.id.container, updateProfile)
+                    .addToBackStack(updateProfile.toString())
+                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                    .commit()
+            }
         }
 
         userRecipes.setOnClickListener{
-            val userBundle = Bundle()
-            userBundle.putString("UserID", UserID)
-
             val viewUserRecipes = UserRecipesFragment()
             viewUserRecipes.arguments = userBundle
 

@@ -24,6 +24,26 @@ class AddRecipeFragment : Fragment() {
 
     private val sdf = SimpleDateFormat("dd.MM.yyyy hh:mm")
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        return inflater.inflate(R.layout.fragment_add_recipe, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        buttonUpload = recipeButtonUpload
+        buttonUpload.setOnClickListener{
+            addRecipe()
+        }
+    }
+
     @SuppressLint("NewApi")
     private fun addRecipe() {
         sdf.timeZone = TimeZone.getTimeZone("GMT+2")
@@ -62,26 +82,6 @@ class AddRecipeFragment : Fragment() {
         recipeDescAdd.setText("")
         recipeIngredientsAdd.setText("")
         recipeMainTextAdd.setText("")
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_add_recipe, container, false)
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        buttonUpload = recipeButtonUpload
-        buttonUpload.setOnClickListener{
-            addRecipe()
-        }
     }
 
     companion object {

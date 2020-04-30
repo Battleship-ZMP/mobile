@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="15dp"
+    tools:context=".fragments.ViewRecipe">
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/userImageUpdate"
+                android:layout_width="250dp"
+                android:layout_height="250dp"
+                android:layout_gravity="center_horizontal"
+                android:paddingBottom="15dp"
+                android:src="@android:drawable/ic_menu_gallery" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="20dp"
+                android:text="Nazwa użytkownika"
+                android:textColor="#6E6E6E"
+                android:textSize="18sp" />
+
+            <EditText
+                android:id="@+id/userNameUpdate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="Nazwa"
+                android:inputType="textPersonName"
+                android:paddingTop="20dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="20dp"
+                android:text="Biografia"
+                android:textColor="#6E6E6E"
+                android:textSize="18sp" />
+
+            <EditText
+                android:id="@+id/userBioUpdate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="Biografia"
+                android:inputType="textMultiLine"
+                android:paddingTop="20dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginBottom="20dp"
+                android:text="Zmiana hasła"
+                android:textColor="#050505"
+                android:textSize="22sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="20dp"
+                android:text="Stare hasło"
+                android:textColor="#6E6E6E"
+                android:textSize="18sp" />
+
+            <EditText
+                android:id="@+id/userPasswordUpdateOld"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="textPassword"
+                android:paddingTop="20dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="20dp"
+                android:text="Nowe hasło"
+                android:textColor="#6E6E6E"
+                android:textSize="18sp" />
+
+            <EditText
+                android:id="@+id/userPasswordUpdateNew"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="textPassword"
+                android:paddingTop="20dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="20dp"
+                android:text="Potwierdź nowe hasło"
+                android:textColor="#6E6E6E"
+                android:textSize="18sp" />
+
+            <EditText
+                android:id="@+id/userPasswordUpdateConfirmNew"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="40dp"
+                android:ems="10"
+                android:inputType="textPassword"
+                android:paddingTop="20dp" />
+
+            <Button
+                android:id="@+id/userProfileUpdateButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="40dp"
+                android:padding="10dp"
+                android:text="Zaktualizuj profil" />
+
+            <Button
+                android:id="@+id/userProfileDeleteButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:background="#FA8A8A"
+                android:padding="10dp"
+                android:text="Usuń konto" />
+
+
+        </LinearLayout>
+
+
+    </ScrollView>
+
+</LinearLayout>

@@ -31,7 +31,7 @@
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:hint="Nazwa przepisu"
-                android:inputType="textPersonName"
+                android:inputType="text"
                 android:paddingTop="20dp" />
 
             <EditText
@@ -70,6 +70,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:text="Zapisz przepis" />
+
         </LinearLayout>
     </ScrollView>
 

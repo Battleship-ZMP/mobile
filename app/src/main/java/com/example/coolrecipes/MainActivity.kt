@@ -79,6 +79,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val user = FirebaseAuth.getInstance().currentUser
         if (user != null) {
             loggedIn()
+
         } else {
             loggedOut()
         }
@@ -102,15 +103,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         username.text = "Niezalogowano"
     }
     private fun loggedIn() {
-        val user = FirebaseAuth.getInstance().currentUser
         navMenu.findItem(R.id.nav_logout).isVisible = true
         navMenu.findItem(R.id.nav_cookbook).isVisible = true
         navMenu.findItem(R.id.nav_profile).isVisible = true
         navMenu.findItem(R.id.nav_add_recipe).isVisible = true
         navMenu.findItem(R.id.nav_login).isVisible = false
-        if (user != null) {
-            username.text = "${user.displayName}"
-        }
         getProfile()
     }
 
@@ -221,6 +218,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     if (document.data == null) {
                         createProfile()
                     }
+                val user = FirebaseAuth.getInstance().currentUser
+                if (user != null) {
+                    username.text = "${user.displayName}"
+                }
             }
     }
 
