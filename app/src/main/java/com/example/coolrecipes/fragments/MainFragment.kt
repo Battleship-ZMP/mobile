@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.RadioButton
 import android.widget.Toast
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
@@ -28,10 +29,9 @@ class MainFragment : Fragment() {
     private var recipeRef = db.collection("recipes")
     private lateinit var adapter: RecipeAdapter
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-    }
+    lateinit var sortByDateButton: RadioButton
+    lateinit var sortByNameButton: RadioButton
+    lateinit var sortByRatingButton: RadioButton
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -42,6 +42,67 @@ class MainFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        sortByDateButton = sortByDate
+        sortByNameButton = sortByName
+        sortByRatingButton = sortByRating
+
+        sortByDateButton.setOnClickListener {
+            val sortMode = "byDate"
+            val sortModeBundle = Bundle()
+            sortModeBundle.putString("SortMode", sortMode)
+
+            val mainFragment = MainFragment()
+            mainFragment.arguments = sortModeBundle
+
+            val fragmentManager: FragmentManager? = fragmentManager
+            if (fragmentManager != null) {
+                fragmentManager
+                    .beginTransaction()
+                    .replace(R.id.container, mainFragment)
+                    .addToBackStack(mainFragment.toString())
+                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                    .commit()
+            }
+        }
+
+        sortByNameButton.setOnClickListener {
+            val sortMode = "byName"
+            val sortModeBundle = Bundle()
+            sortModeBundle.putString("SortMode", sortMode)
+
+            val mainFragment = MainFragment()
+            mainFragment.arguments = sortModeBundle
+
+            val fragmentManager: FragmentManager? = fragmentManager
+            if (fragmentManager != null) {
+                fragmentManager
+                    .beginTransaction()
+                    .replace(R.id.container, mainFragment)
+                    .addToBackStack(mainFragment.toString())
+                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                    .commit()
+            }
+        }
+
+        sortByRatingButton.setOnClickListener {
+            val sortMode = "byRating"
+            val sortModeBundle = Bundle()
+            sortModeBundle.putString("SortMode", sortMode)
+
+            val mainFragment = MainFragment()
+            mainFragment.arguments = sortModeBundle
+
+            val fragmentManager: FragmentManager? = fragmentManager
+            if (fragmentManager != null) {
+                fragmentManager
+                    .beginTransaction()
+                    .replace(R.id.container, mainFragment)
+                    .addToBackStack(mainFragment.toString())
+                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                    .commit()
+            }
+        }
 
         setUpRecyclerView()
 
@@ -71,17 +132,53 @@ class MainFragment : Fragment() {
         }
 
     private fun setUpRecyclerView() {
-        val query: Query = recipeRef.orderBy("rating", Query.Direction.DESCENDING)
+        val bundle = this.arguments
+        val SortMode = bundle?.getString("SortMode")
 
-        val options = FirestoreRecyclerOptions.Builder<Recipe>()
-            .setQuery(query, Recipe::class.java)
-            .build()
+        if (SortMode == "byDate") {
+            sortByRatingButton.isChecked = false; sortByNameButton.isChecked = false; sortByDateButton.isChecked = true
+            val query: Query = recipeRef.orderBy("date", Query.Direction.DESCENDING)
 
-        adapter = RecipeAdapter(options)
+            val options = FirestoreRecyclerOptions.Builder<Recipe>()
+                .setQuery(query, Recipe::class.java)
+                .build()
 
-        recyclerview_main_list.setHasFixedSize(true)
-        recyclerview_main_list.layoutManager = LinearLayoutManager(this.context)
-        recyclerview_main_list.adapter = adapter
+            adapter = RecipeAdapter(options)
+
+            recyclerview_main_list.setHasFixedSize(true)
+            recyclerview_main_list.layoutManager = LinearLayoutManager(this.context)
+            recyclerview_main_list.adapter = adapter
+        }
+
+        if (SortMode == "byName") {
+            sortByRatingButton.isChecked = false; sortByDateButton.isChecked = false; sortByNameButton.isChecked = true
+            val query: Query = recipeRef.orderBy("name", Query.Direction.ASCENDING)
+
+            val options = FirestoreRecyclerOptions.Builder<Recipe>()
+                .setQuery(query, Recipe::class.java)
+                .build()
+
+            adapter = RecipeAdapter(options)
+
+            recyclerview_main_list.setHasFixedSize(true)
+            recyclerview_main_list.layoutManager = LinearLayoutManager(this.context)
+            recyclerview_main_list.adapter = adapter
+        }
+
+        if (SortMode == "byRating" || SortMode == null) {
+            sortByNameButton.isChecked = false; sortByDateButton.isChecked = false; sortByRatingButton.isChecked = true
+            val query: Query = recipeRef.orderBy("rating", Query.Direction.DESCENDING)
+
+            val options = FirestoreRecyclerOptions.Builder<Recipe>()
+                .setQuery(query, Recipe::class.java)
+                .build()
+
+            adapter = RecipeAdapter(options)
+
+            recyclerview_main_list.setHasFixedSize(true)
+            recyclerview_main_list.layoutManager = LinearLayoutManager(this.context)
+            recyclerview_main_list.adapter = adapter
+        }
     }
 
     override fun onStart() {

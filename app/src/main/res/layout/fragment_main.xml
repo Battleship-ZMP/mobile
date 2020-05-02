@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -7,8 +8,36 @@
     tools:context=".fragments.MainFragment">
 
 
+    <RadioGroup
+        android:id="@+id/sortModeButtonGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center_horizontal">
+
+        <RadioButton
+            android:id="@+id/sortByDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Data dodania" />
+
+        <RadioButton
+            android:id="@+id/sortByName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Alfabetycznie" />
+
+        <RadioButton
+            android:id="@+id/sortByRating"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Wg. ocen" />
+    </RadioGroup>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerview_main_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+
+</LinearLayout>

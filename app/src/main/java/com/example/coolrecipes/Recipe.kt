@@ -7,6 +7,7 @@ class Recipe {
     private var description: String = ""
     private var rating: Float = 0.0F
     private var userID: String = ""
+    private var date: String = ""
 
     fun getName(): String {
         return name
@@ -22,6 +23,10 @@ class Recipe {
 
     fun getUserID(): String {
         return userID
+    }
+
+    fun getDate(): String {
+        return date
     }
 
 }

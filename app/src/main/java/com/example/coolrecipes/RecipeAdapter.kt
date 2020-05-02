@@ -26,6 +26,7 @@ class RecipeAdapter(options: FirestoreRecyclerOptions<Recipe>) :
         holder.RecipeTitleMain.text = model.getName()
         holder.RecipeDescriptionMain.text = model.getDescription()
         holder.RecipeRatingMain.rating = model.getRating()
+        holder.RecipeDateMain.text = model.getDate()
 
         val userRef = FirebaseFirestore.getInstance().collection("users").document(model.getUserID())
 
@@ -55,6 +56,7 @@ class RecipeAdapter(options: FirestoreRecyclerOptions<Recipe>) :
         var RecipeDescriptionMain: TextView = itemView.findViewById(R.id.recipe_description_main_list)
         var RecipeRatingMain: RatingBar = itemView.findViewById(R.id.recipe_rating_main_list)
         var RecipeUserNameMain: TextView = itemView.findViewById(R.id.recipe_addedby_main_list)
+        var RecipeDateMain: TextView = itemView.findViewById(R.id.recipe_date_main_list)
 
         init {
             itemView.setOnClickListener {
