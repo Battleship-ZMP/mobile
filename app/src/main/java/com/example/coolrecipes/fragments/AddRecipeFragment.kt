@@ -19,7 +19,7 @@ import java.util.*
 
 class AddRecipeFragment : Fragment() {
 
-    private val TAG = "AddRecipeFragment"
+    private var db = FirebaseFirestore.getInstance()
     lateinit var buttonUpload: Button
 
     private val sdf = SimpleDateFormat("dd.MM.yyyy hh:mm")
@@ -38,6 +38,22 @@ class AddRecipeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val bundle = this.arguments
+        val recipeEditID = bundle?.getString("RecipeEditID")
+        val recipeRef = recipeEditID?.let { db.collection("recipes").document(it) }
+
+        if (recipeRef != null) {
+            recipeRef.get()
+                .addOnSuccessListener { document ->
+                    if (document != null) {
+                        recipeNameAdd.setText("${document.get("name")}")
+                        recipeDescAdd.setText("${document.get("description")}")
+                        recipeIngredientsAdd.setText("${document.get("ingredients")}")
+                        recipeMainTextAdd.setText("${document.get("instructions")}")
+                    }
+                }
+        }
+
         buttonUpload = recipeButtonUpload
         buttonUpload.setOnClickListener{
             addRecipe()
@@ -50,14 +66,18 @@ class AddRecipeFragment : Fragment() {
         val currentDate = sdf.format(Date())
         val userID = FirebaseAuth.getInstance().currentUser!!.uid
 
-        val recipe = hashMapOf(
+        val bundle = this.arguments
+        val recipeEditID = bundle?.getString("RecipeEditID")
+        val recipeRef = recipeEditID?.let { db.collection("recipes").document(it) }
+
+        val newRecipe = hashMapOf(
             "date" to currentDate.toString(),
             "description" to recipeDescAdd.text.toString(),
             "ingredients" to recipeIngredientsAdd.text.toString(),
             "instructions" to recipeMainTextAdd.text.toString(),
             "name" to recipeNameAdd.text.toString().trim(),
             "photo" to null,
-            "rating" to 0,
+            "rating" to arrayListOf<Int>(),
             "userID" to userID,
             "savedByUsers" to arrayListOf<String>()
         )
@@ -68,20 +88,51 @@ class AddRecipeFragment : Fragment() {
             return
         }
 
-        val firestore = FirebaseFirestore.getInstance()
-        firestore.collection("recipes")
-            .add(recipe)
-            .addOnSuccessListener {
-                Toast.makeText(activity,"Dodano przepis!", Toast.LENGTH_SHORT).show()
-            }
-            .addOnFailureListener { e ->
-                Toast.makeText(activity,"Błąd podczas dodawania przepisu!", Toast.LENGTH_SHORT).show()
-            }
+        if (recipeRef != null) {
+            recipeRef.get()
+                .addOnSuccessListener { document ->
+                    val photo = document.get("photo")
+                    val ratings = document.get("rating")
+                    val savedByUsers = document.get("savedByUsers")
 
-        recipeNameAdd.setText("")
-        recipeDescAdd.setText("")
-        recipeIngredientsAdd.setText("")
-        recipeMainTextAdd.setText("")
+                    val updateRecipe = hashMapOf(
+                        "date" to currentDate.toString(),
+                        "description" to recipeDescAdd.text.toString(),
+                        "ingredients" to recipeIngredientsAdd.text.toString(),
+                        "instructions" to recipeMainTextAdd.text.toString(),
+                        "name" to recipeNameAdd.text.toString().trim(),
+                        "photo" to photo,
+                        "rating" to ratings,
+                        "userID" to userID,
+                        "savedByUsers" to savedByUsers
+                    )
+
+                    db.collection("recipes").document(recipeEditID)
+                        .set(updateRecipe)
+                        .addOnSuccessListener {
+                            Toast.makeText(activity,"Zaktualizowano przepis!", Toast.LENGTH_SHORT).show()
+                        }
+                        .addOnFailureListener {
+                            Toast.makeText(activity,"Błąd podczas aktualizacji przepisu!", Toast.LENGTH_SHORT).show()
+                        }
+                }
+        } else {
+            val firestore = FirebaseFirestore.getInstance()
+            firestore.collection("recipes")
+                .add(newRecipe)
+                .addOnSuccessListener {
+                    Toast.makeText(activity,"Dodano przepis!", Toast.LENGTH_SHORT).show()
+                }
+                .addOnFailureListener { e ->
+                    Toast.makeText(activity,"Błąd podczas dodawania przepisu!", Toast.LENGTH_SHORT).show()
+                }
+
+            recipeNameAdd.setText("")
+            recipeDescAdd.setText("")
+            recipeIngredientsAdd.setText("")
+            recipeMainTextAdd.setText("")
+        }
+
     }
 
     companion object {

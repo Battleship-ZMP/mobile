@@ -25,7 +25,7 @@ class RecipeAdapter(options: FirestoreRecyclerOptions<Recipe>) :
     ) {
         holder.RecipeTitleMain.text = model.getName()
         holder.RecipeDescriptionMain.text = model.getDescription()
-        holder.RecipeRatingMain.rating = model.getRating()
+        holder.RecipeRatingMain.rating = model.getRating().average().toFloat()
         holder.RecipeDateMain.text = model.getDate()
 
         val userRef = FirebaseFirestore.getInstance().collection("users").document(model.getUserID())

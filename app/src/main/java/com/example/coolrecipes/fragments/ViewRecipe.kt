@@ -21,6 +21,8 @@ class ViewRecipe : Fragment() {
 
     private var db = FirebaseFirestore.getInstance()
     lateinit var buttonFavorite: Button
+    lateinit var buttonEdit: Button
+    lateinit var buttonDelete: Button
     lateinit var recipeUser: TextView
     private val currentUserID = FirebaseAuth.getInstance().currentUser?.uid
 
@@ -56,7 +58,11 @@ class ViewRecipe : Fragment() {
 
                         recipeName.text = "${document.get("name")}"
                         recipeDateAdded.text = "${document.get("date")}"
-                        recipeRating.rating = "${document.get("rating")}".toFloat()
+
+                        val ratings = document.get("rating") as List<Int>
+                        val averageRating = ratings.average().toFloat()
+                        recipeRating.rating = averageRating
+
                         recipeDesc.text = "${document.get("description")}"
                         recipeIngredients.text = "${document.get("ingredients")}"
                         recipeTextMain.text = "${document.get("instructions")}"
@@ -105,6 +111,59 @@ class ViewRecipe : Fragment() {
                                     .addToBackStack(ViewRecipe().toString())
                                     .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                                     .commit()
+                            }
+                        }
+
+                        buttonEdit = editButton
+                        if (userID != currentUserID) {
+                            buttonEdit.isVisible = false
+                        } else {
+                            buttonEdit.isVisible = true
+
+                            buttonEdit.setOnClickListener {
+                                val recipeEditBundle = Bundle()
+                                recipeEditBundle.putString("RecipeEditID", RecipeID)
+
+                                val recipeEdit = AddRecipeFragment()
+                                recipeEdit.arguments = recipeEditBundle
+
+                                val fragmentManager: FragmentManager? = fragmentManager
+                                if (fragmentManager != null) {
+                                    fragmentManager
+                                        .beginTransaction()
+                                        .replace(R.id.container, recipeEdit)
+                                        .addToBackStack(recipeEdit.toString())
+                                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                                        .commit()
+                                }
+                            }
+                        }
+
+                        buttonDelete = deleteButton
+                        if (userID != currentUserID) {
+                            buttonDelete.isVisible = false
+                        } else {
+                            buttonDelete.isVisible = true
+
+                            buttonDelete.setOnClickListener {
+                                db.collection("recipes").document(RecipeID).delete()
+                                    .addOnSuccessListener {
+                                        Toast.makeText(activity,"Usunięto przepis!", Toast.LENGTH_SHORT).show()
+                                        val fragmentManager: FragmentManager? = fragmentManager
+                                        if (fragmentManager != null) {
+                                            fragmentManager
+                                                .beginTransaction()
+                                                .replace(R.id.container, MainFragment())
+                                                .addToBackStack(MainFragment().toString())
+                                                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                                                .commit()
+                                            fragmentManager
+                                                .popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+                                        }
+                                    }
+                                    .addOnFailureListener {
+                                        Toast.makeText(activity,"Błąd podczas usuwania przepisu!", Toast.LENGTH_SHORT).show()
+                                    }
                             }
                         }
                     }

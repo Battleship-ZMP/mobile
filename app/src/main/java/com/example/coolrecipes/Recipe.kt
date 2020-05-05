@@ -5,7 +5,7 @@ class Recipe {
 
     private var name: String = ""
     private var description: String = ""
-    private var rating: Float = 0.0F
+    private var rating: List<Int> = emptyList()
     private var userID: String = ""
     private var date: String = ""
 
@@ -17,7 +17,7 @@ class Recipe {
         return description
     }
 
-    fun getRating(): Float {
+    fun getRating(): List<Int> {
         return rating
     }
 
