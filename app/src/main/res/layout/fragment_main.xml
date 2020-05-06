@@ -7,7 +7,6 @@
     android:orientation="vertical"
     tools:context=".fragments.MainFragment">
 
-
     <RadioGroup
         android:id="@+id/sortModeButtonGroup"
         android:layout_width="wrap_content"
@@ -37,7 +36,8 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerview_main_list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:background="#C1C1C1"/>
 
 
 </LinearLayout>

@@ -1,6 +1,9 @@
 package com.example.coolrecipes.fragments
 
 import android.annotation.SuppressLint
+import android.app.Activity.RESULT_OK
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -8,25 +11,27 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.Toast
 
 import com.example.coolrecipes.R
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_add_recipe.*
 import java.text.SimpleDateFormat
 import java.util.*
 
 class AddRecipeFragment : Fragment() {
 
+    private val PICK_IMAGE_REQUEST: Int = 5000
+    private var imageUri: Uri? = null
+
     private var db = FirebaseFirestore.getInstance()
     lateinit var buttonUpload: Button
+    lateinit var pickImageButton: ImageButton
 
     private val sdf = SimpleDateFormat("dd.MM.yyyy hh:mm")
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,6 +42,11 @@ class AddRecipeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        pickImageButton = imageButtonAdd
+        pickImageButton.setOnClickListener {
+            chooseFile()
+        }
 
         val bundle = this.arguments
         val recipeEditID = bundle?.getString("RecipeEditID")
@@ -133,6 +143,26 @@ class AddRecipeFragment : Fragment() {
             recipeMainTextAdd.setText("")
         }
 
+    }
+
+    private fun chooseFile() {
+        val intent = Intent()
+        intent.type = "image/*"
+        intent.action = Intent.ACTION_GET_CONTENT
+        startActivityForResult(intent, PICK_IMAGE_REQUEST)
+    }
+
+    override fun onActivityResult(
+        requestCode: Int,
+        resultCode: Int,
+        data: Intent?
+    ) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.data != null
+        ) {
+            imageUri = data.data
+            Picasso.get().load(imageUri).into(pickImageButton)
+        }
     }
 
     companion object {

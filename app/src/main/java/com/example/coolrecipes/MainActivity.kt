@@ -25,8 +25,9 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
-    lateinit var providers : List<AuthUI.IdpConfig>
     private val REQUEST_CODE: Int = 6969
+
+    lateinit var providers : List<AuthUI.IdpConfig>
     lateinit var toolbar: Toolbar
     lateinit var drawerLayout: DrawerLayout
     lateinit var navView: NavigationView
