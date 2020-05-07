@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
+import android.widget.ImageView
 import android.widget.RatingBar
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -11,6 +12,8 @@ import com.firebase.ui.firestore.FirestoreRecyclerAdapter
 import com.firebase.ui.firestore.FirestoreRecyclerOptions
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
+import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.nav_header.view.*
 
 
 class RecipeAdapter(options: FirestoreRecyclerOptions<Recipe>) :
@@ -27,6 +30,11 @@ class RecipeAdapter(options: FirestoreRecyclerOptions<Recipe>) :
         holder.RecipeDescriptionMain.text = model.getDescription()
         holder.RecipeRatingMain.rating = model.getRating().average().toFloat()
         holder.RecipeDateMain.text = model.getDate()
+
+        val imageURL = model.getPhoto()
+        if (!imageURL.isNullOrEmpty()) {
+            Picasso.get().load(imageURL).into(holder.RecipeImageMain)
+        }
 
         val userRef = FirebaseFirestore.getInstance().collection("users").document(model.getUserID())
 
@@ -57,6 +65,7 @@ class RecipeAdapter(options: FirestoreRecyclerOptions<Recipe>) :
         var RecipeRatingMain: RatingBar = itemView.findViewById(R.id.recipe_rating_main_list)
         var RecipeUserNameMain: TextView = itemView.findViewById(R.id.recipe_addedby_main_list)
         var RecipeDateMain: TextView = itemView.findViewById(R.id.recipe_date_main_list)
+        var RecipeImageMain: ImageView = itemView.findViewById(R.id.recipe_image_main_list)
 
         init {
             itemView.setOnClickListener {

@@ -8,6 +8,7 @@ class Recipe {
     private var rating: List<Int> = emptyList()
     private var userID: String = ""
     private var date: String = ""
+    private var photo: String = ""
 
     fun getName(): String {
         return name
@@ -27,6 +28,10 @@ class Recipe {
 
     fun getDate(): String {
         return date
+    }
+
+    fun getPhoto(): String {
+        return photo
     }
 
 }

@@ -15,6 +15,7 @@ import androidx.fragment.app.FragmentTransaction
 import com.example.coolrecipes.R
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.*
+import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_view_recipe.*
 
 class ViewRecipe : Fragment() {
@@ -66,6 +67,11 @@ class ViewRecipe : Fragment() {
                         recipeDesc.text = "${document.get("description")}"
                         recipeIngredients.text = "${document.get("ingredients")}"
                         recipeTextMain.text = "${document.get("instructions")}"
+
+                        val recipeImageSrc = "${document.get("photo")}"
+                        if (!recipeImageSrc.isNullOrEmpty()) {
+                            Picasso.get().load(recipeImageSrc).into(recipeImage)
+                        }
 
                         buttonFavorite = favoriteButton
                         if (currentUserID == null) {
