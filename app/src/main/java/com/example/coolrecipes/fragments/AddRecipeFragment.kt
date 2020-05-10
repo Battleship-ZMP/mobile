@@ -15,8 +15,14 @@ import android.widget.ImageButton
 import android.widget.Toast
 
 import com.example.coolrecipes.R
+import com.google.common.io.Files
+import com.google.common.io.Files.getFileExtension
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
+import com.google.firebase.storage.StorageTask
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_add_recipe.*
 import java.text.SimpleDateFormat
@@ -26,6 +32,9 @@ class AddRecipeFragment : Fragment() {
 
     private val PICK_IMAGE_REQUEST: Int = 5000
     private var imageUri: Uri? = null
+
+    private var storageRef: StorageReference? = null
+    private var uploadTask: StorageTask<*>? = null
 
     private var db = FirebaseFirestore.getInstance()
     lateinit var buttonUpload: Button
@@ -47,6 +56,8 @@ class AddRecipeFragment : Fragment() {
         pickImageButton.setOnClickListener {
             chooseFile()
         }
+
+        storageRef = FirebaseStorage.getInstance().getReference("recipes");
 
         val bundle = this.arguments
         val recipeEditID = bundle?.getString("RecipeEditID")
@@ -130,8 +141,29 @@ class AddRecipeFragment : Fragment() {
             val firestore = FirebaseFirestore.getInstance()
             firestore.collection("recipes")
                 .add(newRecipe)
-                .addOnSuccessListener {
-                    Toast.makeText(activity,"Dodano przepis!", Toast.LENGTH_SHORT).show()
+                .addOnSuccessListener {response ->
+                    val responseID = response.id
+
+                    if (imageUri != null) {
+                        val fileReference: StorageReference = storageRef!!.child(responseID + "/" + System.currentTimeMillis().toString())
+                        uploadTask = imageUri?.let { fileReference.putFile(it) }
+
+                        val urlTask = uploadTask!!.continueWithTask { task ->
+                            if (!task.isSuccessful) {
+                                task.exception?.let {
+                                    throw it
+                                }
+                            }
+                            fileReference.downloadUrl
+                        }.addOnCompleteListener { task ->
+                            if (task.isSuccessful) {
+                                val downloadUri = task.result
+                                db.collection("recipes").document(responseID).update("photo", downloadUri.toString())
+                            }
+                        }
+                    }
+
+                    Toast.makeText(activity, "Dodano przepis!", Toast.LENGTH_SHORT).show()
                 }
                 .addOnFailureListener { e ->
                     Toast.makeText(activity,"Błąd podczas dodawania przepisu!", Toast.LENGTH_SHORT).show()
