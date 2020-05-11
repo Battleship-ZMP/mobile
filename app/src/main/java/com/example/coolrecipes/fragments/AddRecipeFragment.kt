@@ -71,6 +71,11 @@ class AddRecipeFragment : Fragment() {
                         recipeDescAdd.setText("${document.get("description")}")
                         recipeIngredientsAdd.setText("${document.get("ingredients")}")
                         recipeMainTextAdd.setText("${document.get("instructions")}")
+
+                        val photo = document.get("photo").toString()
+                        if (!photo.isNullOrEmpty()) {
+                            Picasso.get().load(photo).into(pickImageButton)
+                        }
                     }
                 }
         }
@@ -131,6 +136,25 @@ class AddRecipeFragment : Fragment() {
                     db.collection("recipes").document(recipeEditID)
                         .set(updateRecipe)
                         .addOnSuccessListener {
+                            if (imageUri != null) {
+                                val fileReference: StorageReference = storageRef!!.child(recipeEditID + "/" + System.currentTimeMillis().toString())
+                                uploadTask = imageUri?.let { fileReference.putFile(it) }
+
+                                val urlTask = uploadTask!!.continueWithTask { task ->
+                                    if (!task.isSuccessful) {
+                                        task.exception?.let {
+                                            throw it
+                                        }
+                                    }
+                                    fileReference.downloadUrl
+                                }.addOnCompleteListener { task ->
+                                    if (task.isSuccessful) {
+                                        val downloadUri = task.result
+                                        db.collection("recipes").document(recipeEditID).update("photo", downloadUri.toString())
+                                    }
+                                }
+                            }
+
                             Toast.makeText(activity,"Zaktualizowano przepis!", Toast.LENGTH_SHORT).show()
                         }
                         .addOnFailureListener {
