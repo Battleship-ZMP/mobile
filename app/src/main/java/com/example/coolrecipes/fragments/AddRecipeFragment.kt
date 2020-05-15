@@ -73,7 +73,7 @@ class AddRecipeFragment : Fragment() {
                         recipeMainTextAdd.setText("${document.get("instructions")}")
 
                         val photo = document.get("photo").toString()
-                        if (!photo.isNullOrEmpty()) {
+                        if (photo.isNotEmpty() && photo != "null") {
                             Picasso.get().load(photo).into(pickImageButton)
                         }
                     }

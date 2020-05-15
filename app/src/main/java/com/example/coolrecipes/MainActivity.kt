@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
@@ -21,7 +22,10 @@ import com.firebase.ui.auth.IdpResponse
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.fragment_profile.*
+import kotlinx.android.synthetic.main.nav_header.*
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
@@ -34,6 +38,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     lateinit var headerView: View
     lateinit var navMenu: Menu
     lateinit var username: TextView
+    lateinit var userPic: ImageView
     lateinit var mainFragment: MainFragment
     lateinit var cookbookFavoritesFragment: CookBookFavoritesFragment
     lateinit var cookbookAddedFragment: CookBookAddedFragment
@@ -52,6 +57,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         navMenu = nav_view.menu
         headerView = navView.getHeaderView(0)
         username = headerView.findViewById(R.id.username)
+        userPic = headerView.findViewById(R.id.userProfilePicDrawer)
 
         val toggle = ActionBarDrawerToggle(
             this, drawerLayout, toolbar, 0, 0
@@ -102,6 +108,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         navMenu.findItem(R.id.nav_add_recipe).isVisible = false
         navMenu.findItem(R.id.nav_login).isVisible = true
         username.text = "Niezalogowano"
+        Picasso.get().load("https://firebasestorage.googleapis.com/v0/b/coolrecipes-f4e21.appspot.com/o/placeholders%2Favatar_placeholder.png?alt=media&token=a53a239f-ed1e-4de8-ba7c-80c29f82f52f").into(userPic)
     }
     private fun loggedIn() {
         navMenu.findItem(R.id.nav_logout).isVisible = true
@@ -222,6 +229,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 val user = FirebaseAuth.getInstance().currentUser
                 if (user != null) {
                     username.text = "${user.displayName}"
+                }
+
+                val profile_pic = "${document.get("photo")}"
+                if (profile_pic.isEmpty() || profile_pic == "null") {
+                    Picasso.get().load("https://firebasestorage.googleapis.com/v0/b/coolrecipes-f4e21.appspot.com/o/placeholders%2Favatar_placeholder.png?alt=media&token=a53a239f-ed1e-4de8-ba7c-80c29f82f52f").into(userPic)
+                } else {
+                    Picasso.get().load(profile_pic).into(userPic)
                 }
             }
     }

@@ -32,16 +32,22 @@
                 android:layout_height="40dp"
                 android:layout_gravity="center_horizontal"
                 android:textColor="#050505"
-                android:textSize="24sp"
-                android:text="userName" />
+                android:textSize="24sp" />
+
+            <TextView
+                android:id="@+id/userEmail"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_gravity="center_horizontal"
+                android:textColor="#5A5A5A"
+                android:textSize="18sp" />
 
             <TextView
                 android:id="@+id/userBio"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:textColor="?android:attr/colorForeground"
-                android:text="userBio" />
+                android:textColor="?android:attr/colorForeground" />
 
             <Button
                 android:id="@+id/updateProfileButton"

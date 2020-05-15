@@ -69,8 +69,10 @@ class ViewRecipe : Fragment() {
                         recipeTextMain.text = "${document.get("instructions")}"
 
                         val recipeImageSrc = "${document.get("photo")}"
-                        if (!recipeImageSrc.isNullOrEmpty()) {
+                        if (recipeImageSrc != "" && recipeImageSrc != "null") {
                             Picasso.get().load(recipeImageSrc).into(recipeImage)
+                        } else {
+                            Picasso.get().load("https://firebasestorage.googleapis.com/v0/b/coolrecipes-f4e21.appspot.com/o/placeholders%2Frecipe_placeholder.png?alt=media&token=a23e9154-81c1-4d70-83a1-af110b2649c9").into(recipeImage)
                         }
 
                         buttonFavorite = favoriteButton

@@ -29,7 +29,7 @@
             <TextView
                 android:id="@+id/recipeName"
                 android:layout_width="wrap_content"
-                android:layout_height="40dp"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:textColor="#050505"
                 android:textSize="24sp" />
