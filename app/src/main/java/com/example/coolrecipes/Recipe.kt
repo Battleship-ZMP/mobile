@@ -1,5 +1,7 @@
 package com.example.coolrecipes
 
+import com.google.firebase.Timestamp
+
 
 class Recipe {
 
@@ -7,7 +9,7 @@ class Recipe {
     private var description: String = ""
     private var rating: List<Int> = emptyList()
     private var userID: String = ""
-    private var date: String = ""
+    private lateinit var date: Timestamp
     private var photo: String = ""
 
     fun getName(): String {
@@ -26,7 +28,7 @@ class Recipe {
         return userID
     }
 
-    fun getDate(): String {
+    fun getDate(): Timestamp {
         return date
     }
 

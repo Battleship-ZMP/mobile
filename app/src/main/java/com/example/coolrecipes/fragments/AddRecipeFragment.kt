@@ -17,6 +17,7 @@ import android.widget.Toast
 import com.example.coolrecipes.R
 import com.google.common.io.Files
 import com.google.common.io.Files.getFileExtension
+import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
@@ -39,8 +40,6 @@ class AddRecipeFragment : Fragment() {
     private var db = FirebaseFirestore.getInstance()
     lateinit var buttonUpload: Button
     lateinit var pickImageButton: ImageButton
-
-    private val sdf = SimpleDateFormat("dd.MM.yyyy hh:mm")
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -88,8 +87,6 @@ class AddRecipeFragment : Fragment() {
 
     @SuppressLint("NewApi")
     private fun addRecipe() {
-        sdf.timeZone = TimeZone.getTimeZone("GMT+2")
-        val currentDate = sdf.format(Date())
         val userID = FirebaseAuth.getInstance().currentUser!!.uid
 
         val bundle = this.arguments
@@ -97,7 +94,7 @@ class AddRecipeFragment : Fragment() {
         val recipeRef = recipeEditID?.let { db.collection("recipes").document(it) }
 
         val newRecipe = hashMapOf(
-            "date" to currentDate.toString(),
+            "date" to Timestamp.now(),
             "description" to recipeDescAdd.text.toString(),
             "ingredients" to recipeIngredientsAdd.text.toString(),
             "instructions" to recipeMainTextAdd.text.toString(),
@@ -122,7 +119,7 @@ class AddRecipeFragment : Fragment() {
                     val savedByUsers = document.get("savedByUsers")
 
                     val updateRecipe = hashMapOf(
-                        "date" to currentDate.toString(),
+                        "date" to Timestamp.now(),
                         "description" to recipeDescAdd.text.toString(),
                         "ingredients" to recipeIngredientsAdd.text.toString(),
                         "instructions" to recipeMainTextAdd.text.toString(),

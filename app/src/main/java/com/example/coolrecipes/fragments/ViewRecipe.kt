@@ -13,10 +13,13 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 
 import com.example.coolrecipes.R
+import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.*
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_view_recipe.*
+import java.text.SimpleDateFormat
+import java.util.*
 
 class ViewRecipe : Fragment() {
 
@@ -58,7 +61,13 @@ class ViewRecipe : Fragment() {
                             }
 
                         recipeName.text = "${document.get("name")}"
-                        recipeDateAdded.text = "${document.get("date")}"
+                        val timestamp = document.get("date") as Timestamp
+                        val milliseconds = timestamp.seconds * 1000 + timestamp.nanoseconds / 1000000
+                        val sdf = SimpleDateFormat("dd.MM.yyyy HH:mm:ss", Locale.getDefault())
+                        sdf.timeZone = TimeZone.getTimeZone("GMT+2")
+                        val netDate = Date(milliseconds)
+                        val date = sdf.format(netDate).toString()
+                        recipeDateAdded.text = date
 
                         val ratings = document.get("rating") as List<Int>
                         val averageRating = ratings.average().toFloat()

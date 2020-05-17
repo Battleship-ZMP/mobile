@@ -14,6 +14,9 @@ import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.nav_header.view.*
+import java.text.DateFormat.getDateTimeInstance
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 class RecipeAdapter(options: FirestoreRecyclerOptions<Recipe>) :
@@ -26,10 +29,17 @@ class RecipeAdapter(options: FirestoreRecyclerOptions<Recipe>) :
         position: Int,
         model: Recipe
     ) {
+        val timestamp = model.getDate()
+        val milliseconds = timestamp.seconds * 1000 + timestamp.nanoseconds / 1000000
+        val sdf = SimpleDateFormat("dd.MM.yyyy HH:mm:ss", Locale.getDefault())
+        sdf.timeZone = TimeZone.getTimeZone("GMT+2")
+        val netDate = Date(milliseconds)
+        val date = sdf.format(netDate).toString()
+
         holder.RecipeTitleMain.text = model.getName()
         holder.RecipeDescriptionMain.text = model.getDescription()
         holder.RecipeRatingMain.rating = model.getRating().average().toFloat()
-        holder.RecipeDateMain.text = model.getDate()
+        holder.RecipeDateMain.text = date
 
         val imageURL = model.getPhoto()
         if (!imageURL.isNullOrEmpty()) {
