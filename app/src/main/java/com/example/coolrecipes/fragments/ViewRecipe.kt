@@ -50,13 +50,16 @@ class ViewRecipe : Fragment() {
                 .addOnSuccessListener { document ->
                     if (document != null) {
                         val userID = document.get("userID")
-                        var userName=""
                         val userRef = FirebaseFirestore.getInstance().collection("users").document(userID as String)
                         userRef.get()
                             .addOnSuccessListener { document ->
                                 if (document != null) {
-                                    userName = document.get("userName") as String
-                                    recipeUser.text = userName
+                                    val userName = document.get("userName")
+                                    if (userName != null) {
+                                        recipeUser.text = userName as String
+                                    } else {
+                                        recipeUser.text = "PROFIL USUNIĘTY"
+                                    }
                                 }
                             }
 
@@ -114,21 +117,29 @@ class ViewRecipe : Fragment() {
 
                         recipeUser = recipeAddedBy
                         recipeUser.setOnClickListener{
-                            val userBundle = Bundle()
-                            userBundle.putString("UserID", userID)
+                            db.collection("users").document(userID).get()
+                                .addOnSuccessListener { document ->
+                                    val username = document.get("userName")
+                                    if (username != null) {
+                                        val userBundle = Bundle()
+                                        userBundle.putString("UserID", userID)
 
-                            val profileFragment = ProfileFragment()
-                            profileFragment.arguments = userBundle
+                                        val profileFragment = ProfileFragment()
+                                        profileFragment.arguments = userBundle
 
-                            val fragmentManager: FragmentManager? = fragmentManager
-                            if (fragmentManager != null) {
-                                fragmentManager
-                                    .beginTransaction()
-                                    .replace(R.id.container, profileFragment)
-                                    .addToBackStack(ViewRecipe().toString())
-                                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                                    .commit()
-                            }
+                                        val fragmentManager: FragmentManager? = fragmentManager
+                                        if (fragmentManager != null) {
+                                            fragmentManager
+                                                .beginTransaction()
+                                                .replace(R.id.container, profileFragment)
+                                                .addToBackStack(ViewRecipe().toString())
+                                                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                                                .commit()
+                                        }
+                                    } else {
+                                        Toast.makeText(activity,"Profil nie istnieje!", Toast.LENGTH_SHORT).show()
+                                    }
+                                }
                         }
 
                         buttonEdit = editButton

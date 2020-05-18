@@ -53,8 +53,12 @@ class RecipeAdapter(options: FirestoreRecyclerOptions<Recipe>) :
         userRef.get()
             .addOnSuccessListener { document ->
                 if (document != null) {
-                    val userName = document.get("userName") as String
-                    holder.RecipeUserNameMain.text = userName
+                    val userName = document.get("userName")
+                    if (userName != null) {
+                        holder.RecipeUserNameMain.text = userName as String
+                    } else {
+                        holder.RecipeUserNameMain.text = "PROFIL USUNIĘTY"
+                    }
                 }
             }
     }

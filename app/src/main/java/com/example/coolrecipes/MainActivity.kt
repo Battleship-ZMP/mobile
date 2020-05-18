@@ -110,6 +110,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         username.text = "Niezalogowano"
         Picasso.get().load("https://firebasestorage.googleapis.com/v0/b/coolrecipes-f4e21.appspot.com/o/placeholders%2Favatar_placeholder.png?alt=media&token=a53a239f-ed1e-4de8-ba7c-80c29f82f52f").into(userPic)
     }
+
     private fun loggedIn() {
         navMenu.findItem(R.id.nav_logout).isVisible = true
         navMenu.findItem(R.id.nav_cookbook).isVisible = true

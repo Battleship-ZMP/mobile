@@ -1,17 +1,27 @@
 package com.example.coolrecipes.fragments
 
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.Intent
+import android.content.Intent.getIntent
 import android.net.Uri
 import android.os.Bundle
 import android.text.Editable
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
+import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.core.app.ActivityCompat
+import androidx.core.app.ActivityCompat.finishAffinity
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentTransaction
+import com.example.coolrecipes.MainActivity
 
 import com.example.coolrecipes.R
+import com.firebase.ui.auth.AuthUI
+import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.UserProfileChangeRequest
@@ -20,9 +30,11 @@ import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.StorageTask
 import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_profile.*
 import kotlinx.android.synthetic.main.fragment_profile_update.*
 import kotlinx.android.synthetic.main.nav_header.*
+import kotlinx.android.synthetic.main.nav_header.view.*
 
 class ProfileUpdate : Fragment() {
 
@@ -98,7 +110,61 @@ class ProfileUpdate : Fragment() {
         }
 
         deleteProfile.setOnClickListener {
+            val builder = AlertDialog.Builder(activity)
+            builder.setTitle("USUWANIE PROFILU")
+            builder.setMessage("Jesteś pewny(-a), że chcesz usunąć profil? Ta operacja jest nieodwracalna! (Nie spowoduje to usunięcia Twoich przepisów!)")
 
+            builder.setPositiveButton("Tak"){dialog, which ->
+                if (userPasswordUpdateOld.text.toString().isEmpty())
+                {
+                    Toast.makeText(activity,"Ta operacja wymaga podania hasła! (Pole 'Stare hasło')",Toast.LENGTH_SHORT).show()
+                } else {
+                    val user = FirebaseAuth.getInstance().currentUser
+
+                    val credential = user!!.email?.let {
+                        EmailAuthProvider
+                            .getCredential(it, userPasswordUpdateOld.text.toString())
+                    }
+
+                    if (credential != null) {
+                        user.reauthenticate(credential)
+                            .addOnSuccessListener {
+                                if (UserID != null) {
+                                    db.collection("users").document(UserID).delete()
+                                }
+
+                                user.delete()
+                                    .addOnCompleteListener {
+                                        this.context?.let { it1 -> AuthUI.getInstance().signOut(it1) }
+
+                                        val fragmentManager: FragmentManager? = fragmentManager
+                                        if (fragmentManager != null) {
+                                            fragmentManager
+                                                .beginTransaction()
+                                                .replace(R.id.container, MainFragment())
+                                                .addToBackStack(MainFragment().toString())
+                                                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                                                .commit()
+                                            fragmentManager
+                                                .popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+                                        }
+
+                                        
+                                    }
+                            }
+                            .addOnFailureListener {
+                                Toast.makeText(activity,"Niepoprawne hasło!", Toast.LENGTH_SHORT).show()
+                            }
+                    }
+                }
+
+            }
+
+            builder.setNegativeButton("Nie"){dialog,which ->
+                Toast.makeText(activity,"Anulowano",Toast.LENGTH_SHORT).show()
+            }
+            val dialog: AlertDialog = builder.create()
+            dialog.show()
         }
 
     }
@@ -165,7 +231,7 @@ class ProfileUpdate : Fragment() {
         }
 
         if (credential != null) {
-            user!!.reauthenticate(credential)
+            user.reauthenticate(credential)
                 .addOnSuccessListener { user!!.updatePassword(userPasswordUpdateNew.text.toString()) }
                 .addOnFailureListener { Toast.makeText(activity,"Niepoprawne hasło!", Toast.LENGTH_SHORT).show() }
         }
