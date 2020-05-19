@@ -131,25 +131,16 @@ class ProfileUpdate : Fragment() {
                             .addOnSuccessListener {
                                 if (UserID != null) {
                                     db.collection("users").document(UserID).delete()
+
+                                    Toast.makeText(activity,"Aplikacja zostanie zamknięta.", Toast.LENGTH_SHORT).show()
                                 }
 
                                 user.delete()
                                     .addOnCompleteListener {
                                         this.context?.let { it1 -> AuthUI.getInstance().signOut(it1) }
 
-                                        val fragmentManager: FragmentManager? = fragmentManager
-                                        if (fragmentManager != null) {
-                                            fragmentManager
-                                                .beginTransaction()
-                                                .replace(R.id.container, MainFragment())
-                                                .addToBackStack(MainFragment().toString())
-                                                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                                                .commit()
-                                            fragmentManager
-                                                .popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
-                                        }
-
-                                        
+                                        Thread.sleep(3000L)
+                                        throw Exception("Application closed due to account deletion. This is not an error.")
                                     }
                             }
                             .addOnFailureListener {
