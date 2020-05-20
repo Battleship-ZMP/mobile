@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.RatingBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.view.isVisible
@@ -28,6 +29,7 @@ class ViewRecipe : Fragment() {
     lateinit var buttonEdit: Button
     lateinit var buttonDelete: Button
     lateinit var recipeUser: TextView
+    lateinit var recipeRatingBar: RatingBar
     private val currentUserID = FirebaseAuth.getInstance().currentUser?.uid
 
     override fun onCreateView(
@@ -72,9 +74,19 @@ class ViewRecipe : Fragment() {
                         val date = sdf.format(netDate).toString()
                         recipeDateAdded.text = date
 
-                        val ratings = document.get("rating") as List<Int>
-                        val averageRating = ratings.average().toFloat()
-                        recipeRating.rating = averageRating
+                        recipeRating.rating = (document.get("averageRating") as Double).toFloat()
+
+                        recipeRatingBar = recipeRating
+                        recipeRatingBar.setOnRatingBarChangeListener { _, rating, _ ->
+                            recipeRef.update("rating", FieldValue.arrayUnion(rating))
+                                .addOnSuccessListener {
+                                    recipeRef.get()
+                                        .addOnSuccessListener { document ->
+                                            val newAverage = (document.get("rating") as List<Int>).average()
+                                            recipeRef.update("averageRating", newAverage)
+                                        }
+                                }
+                        }
 
                         recipeDesc.text = "${document.get("description")}"
                         recipeIngredients.text = "${document.get("ingredients")}"

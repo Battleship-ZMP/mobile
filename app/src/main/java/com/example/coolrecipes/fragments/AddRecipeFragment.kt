@@ -101,6 +101,7 @@ class AddRecipeFragment : Fragment() {
             "name" to recipeNameAdd.text.toString().trim(),
             "photo" to null,
             "rating" to arrayListOf<Int>(),
+            "averageRating" to 0.0,
             "userID" to userID,
             "savedByUsers" to arrayListOf<String>()
         )
@@ -116,6 +117,7 @@ class AddRecipeFragment : Fragment() {
                 .addOnSuccessListener { document ->
                     val photo = document.get("photo")
                     val ratings = document.get("rating")
+                    val averageRating = document.get("averageRating")
                     val savedByUsers = document.get("savedByUsers")
 
                     val updateRecipe = hashMapOf(
@@ -126,6 +128,7 @@ class AddRecipeFragment : Fragment() {
                         "name" to recipeNameAdd.text.toString().trim(),
                         "photo" to photo,
                         "rating" to ratings,
+                        "averageRating" to averageRating,
                         "userID" to userID,
                         "savedByUsers" to savedByUsers
                     )

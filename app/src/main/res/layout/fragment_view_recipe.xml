@@ -39,7 +39,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="47dp"
                 android:layout_gravity="center_horizontal"
-                android:isIndicator="true"
                 android:max="5"
                 android:stepSize="1" />
 

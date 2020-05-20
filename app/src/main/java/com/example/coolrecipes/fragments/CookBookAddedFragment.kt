@@ -164,7 +164,7 @@ class CookBookAddedFragment : Fragment() {
 
         if (SortMode == "byRating" || SortMode == null) {
             sortByNameButton.isChecked = false; sortByDateButton.isChecked = false; sortByRatingButton.isChecked = true
-            val query: Query = recipeRef.orderBy("rating", Query.Direction.DESCENDING).whereEqualTo("userID",FirebaseAuth.getInstance().currentUser!!.uid)
+            val query: Query = recipeRef.orderBy("averageRating", Query.Direction.DESCENDING).whereEqualTo("userID",FirebaseAuth.getInstance().currentUser!!.uid)
 
             val options = FirestoreRecyclerOptions.Builder<Recipe>()
                 .setQuery(query, Recipe::class.java)
