@@ -100,7 +100,7 @@ class AddRecipeFragment : Fragment() {
             "instructions" to recipeMainTextAdd.text.toString(),
             "name" to recipeNameAdd.text.toString().trim(),
             "photo" to null,
-            "rating" to arrayListOf<Int>(),
+            "rating" to arrayListOf<Objects>(),
             "averageRating" to 0.0,
             "userID" to userID,
             "savedByUsers" to arrayListOf<String>()

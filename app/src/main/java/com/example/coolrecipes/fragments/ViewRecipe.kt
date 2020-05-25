@@ -1,6 +1,8 @@
 package com.example.coolrecipes.fragments
 
+import android.media.Rating
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -17,8 +19,10 @@ import com.example.coolrecipes.R
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.*
+import com.google.gson.Gson
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_view_recipe.*
+import java.lang.reflect.Array.get
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -74,17 +78,57 @@ class ViewRecipe : Fragment() {
                         val date = sdf.format(netDate).toString()
                         recipeDateAdded.text = date
 
-                        recipeRating.rating = (document.get("averageRating") as Double).toFloat()
+                        if (document.get("averageRating") is Long){
+                            recipeRating.rating = (document.get("averageRating") as Long).toFloat()
+                        } else {
+                            recipeRating.rating = (document.get("averageRating") as Double).toFloat()
+                        }
 
                         recipeRatingBar = recipeRating
                         recipeRatingBar.setOnRatingBarChangeListener { _, rating, _ ->
-                            recipeRef.update("rating", FieldValue.arrayUnion(rating))
-                                .addOnSuccessListener {
-                                    recipeRef.get()
-                                        .addOnSuccessListener { document ->
-                                            val newAverage = (document.get("rating") as List<Int>).average()
-                                            recipeRef.update("averageRating", newAverage)
+                            val ratingInfo = hashMapOf(
+                                "value" to rating,
+                                "userID" to currentUserID
+                            )
+
+                            recipeRef.get()
+                                .addOnSuccessListener { document ->
+                                    val ratings = document["rating"] as List<Map<String, Any>>?
+                                    if (ratings != null) {
+                                        for (item in ratings) {
+                                            if (item.getValue("userID") == currentUserID) {
+                                                recipeRef.update(
+                                                    "rating",
+                                                    FieldValue.arrayRemove(item)
+                                                )
+                                            }
                                         }
+                                    }
+                                    if (currentUserID == null) {
+                                        Toast.makeText(activity,"Zaloguj się, aby ocenić ten przepis!", Toast.LENGTH_SHORT).show()
+                                    } else {
+                                        recipeRef.update("rating", FieldValue.arrayUnion(ratingInfo))
+                                            .addOnSuccessListener {
+                                                recipeRef.get()
+                                                    .addOnSuccessListener { document ->
+                                                        val ratings = document["rating"] as List<Map<String, Any>>?
+                                                        val ratingValues: MutableList<Float> = arrayListOf()
+                                                        if (ratings != null) {
+                                                            for (item in ratings) {
+                                                                if (item.getValue("value") is Long) {
+                                                                    ratingValues.add((item.getValue("value") as Long).toFloat())
+                                                                } else {
+                                                                    ratingValues.add((item.getValue("value") as Double).toFloat())
+                                                                }
+                                                            }
+
+                                                            val newAverage = ratingValues.average()
+                                                            recipeRef.update("averageRating", newAverage)
+                                                            Toast.makeText(activity,"Dodano ocenę!", Toast.LENGTH_SHORT).show()
+                                                        }
+                                                    }
+                                            }
+                                    }
                                 }
                         }
 
@@ -210,6 +254,8 @@ class ViewRecipe : Fragment() {
                 }
         }
     }
+
+    internal class Rating(var userID: String, var value: Int)
 
     companion object {
         @JvmStatic
