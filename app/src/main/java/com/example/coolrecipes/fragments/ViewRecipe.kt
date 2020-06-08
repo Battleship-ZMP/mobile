@@ -81,7 +81,11 @@ class ViewRecipe : Fragment() {
                         if (document.get("averageRating") is Long){
                             recipeRating.rating = (document.get("averageRating") as Long).toFloat()
                         } else {
-                            recipeRating.rating = (document.get("averageRating") as Double).toFloat()
+                            if (document.get("averageRating") == null) {
+                                recipeRating.rating = 0F
+                            } else {
+                                recipeRating.rating = (document.get("averageRating") as Double).toFloat()
+                            }
                         }
 
                         recipeRatingBar = recipeRating
